@@ -1,5 +1,6 @@
 -- main.lua
 require("player")
+local sople2 = require("src.sople")
 
 function love.load()
     szerokosc, wysokosc = love.graphics.getDimensions()
@@ -8,10 +9,10 @@ function love.load()
     czas_dodawania_sopli = 5
     czas_ostatniego_dodania = 0
 
-    poziomy = {"Latwy", "Trudny", "Niemozliwy"}
+    poziomy = { "Latwy", "Trudny", "Niemozliwy" }
     aktualny_poziom = 1
-    szybkosci_dodawania = {5, 3, 1}
-    szybkosci_tla = {0.02, 0.05, 0.1}
+    szybkosci_dodawania = { 5, 3, 1 }
+    szybkosci_tla = { 0.02, 0.05, 0.1 }
     czerwien = 0
 
     sopelImg = love.graphics.newImage("gfx/sopel.png")
@@ -32,7 +33,7 @@ function love.load()
 
     sople = {}
     for i = 1, ilosc_sopli do
-        table.insert(sople, losowySopel())
+        table.insert(sople, sople2.losowy())
     end
 
     monety = {}
@@ -48,21 +49,12 @@ function love.load()
     zebraneMonety = 0
     wynik_koniec = 0
 
-    stan = {menu = {}, gra = {}, przegrana = {} }
+    stan = { menu = {}, gra = {}, przegrana = {} }
     stanGry = stan.menu
 
     font = love.graphics.newFont(40)
     przyciskStart = { x = szerokosc / 2 - 100, y = wysokosc / 2, width = 200, height = 50 }
     przyciskTryb = { x = szerokosc / 2 - 100, y = wysokosc / 2 - 80, width = 200, height = 50 }
-end
-
-function losowySopel()
-    return {
-        x = love.math.random(0, szerokosc - sopelImg:getWidth()),
-        y = love.math.random(-600, -50),
-        width = sopelImg:getWidth(),
-        height = sopelImg:getHeight()
-    }
 end
 
 function losowaMoneta()
@@ -89,28 +81,18 @@ function love.update(dt)
     punkty = math.floor(czas)
 
     if czas - czas_ostatniego_dodania >= szybkosci_dodawania[aktualny_poziom] then
-        table.insert(sople, losowySopel())
+        table.insert(sople, sople2.losowy())
         czas_ostatniego_dodania = czas
     end
 
     if love.keyboard.isDown("a") then gracz.x = gracz.x - 3 end
     if love.keyboard.isDown("d") then gracz.x = gracz.x + 3 end
 
+    if love.keyboard.isDown("escape") then love.event.quit() end
+
     gracz.x = math.max(0, math.min(szerokosc - gracz.width, gracz.x))
 
-    local predkosc = 6
-    for _, sopel in ipairs(sople) do
-        sopel.y = sopel.y + predkosc
-        if sopel.y > wysokosc then
-            sopel.y = -100
-            sopel.x = love.math.random(0, szerokosc - sopel.width)
-        end
-        if niesmiertelny < 0 and kolizja(gracz, sopel) then
-            zycia = zycia - 1
-            niesmiertelny = 2
-            wstrzasy = 0.3
-        end
-    end
+    sople2.update()
 
     for _, m in ipairs(monety) do
         m.y = m.y + 2
@@ -133,9 +115,9 @@ end
 
 function love.mousepressed(x, y, button)
     if button == 1 and stanGry == stan.menu then
-        if kolizja({x = x, y = y, width = 1, height = 1}, przyciskStart) then
+        if kolizja({ x = x, y = y, width = 1, height = 1 }, przyciskStart) then
             stanGry = stan.gra
-        elseif kolizja({x = x, y = y, width = 1, height = 1}, przyciskTryb) then
+        elseif kolizja({ x = x, y = y, width = 1, height = 1 }, przyciskTryb) then
             aktualny_poziom = aktualny_poziom % #poziomy + 1
         end
     end
@@ -148,7 +130,8 @@ function love.draw()
         love.graphics.setColor(1, 1, 1)
         love.graphics.rectangle("fill", przyciskTryb.x, przyciskTryb.y, przyciskTryb.width, przyciskTryb.height, 10)
         love.graphics.setColor(0, 0, 0)
-        love.graphics.printf(poziomy[aktualny_poziom], font, przyciskTryb.x, przyciskTryb.y + 5, przyciskTryb.width, "center")
+        love.graphics.printf(poziomy[aktualny_poziom], font, przyciskTryb.x, przyciskTryb.y + 5, przyciskTryb.width,
+            "center")
         love.graphics.setColor(1, 1, 1)
         love.graphics.rectangle("fill", przyciskStart.x, przyciskStart.y, przyciskStart.width, przyciskStart.height, 10)
         love.graphics.printf("LECIMY", font, przyciskStart.x, przyciskStart.y + 5, przyciskStart.width, "center")
@@ -159,9 +142,7 @@ function love.draw()
             love.graphics.translate(love.math.random(-10, 10), love.math.random(-10, 10))
         end
         rysujSerca()
-        for _, sopel in ipairs(sople) do
-            love.graphics.draw(sopelImg, sopel.x, sopel.y)
-        end
+        sople2.draw()
         player.draw()
         for _, m in ipairs(monety) do
             love.graphics.draw(monetaImg, m.x, m.y)
