@@ -14,11 +14,11 @@ function love.load()
     szybkosci_tla = {0.02, 0.05, 0.1}
     czerwien = 0
 
-    sopelImg = love.graphics.newImage("sopel.png")
-    serce = love.graphics.newImage("serce.png")
-    pusteserce = love.graphics.newImage("pusteserce.png")
-    monetaImg = love.graphics.newImage("moneta.png")
-    playerImg = love.graphics.newImage("gracz.png")
+    sopelImg = love.graphics.newImage("gfx/sopel.png")
+    serce = love.graphics.newImage("gfx/serce.png")
+    pusteserce = love.graphics.newImage("gfx/pusteserce.png")
+    monetaImg = love.graphics.newImage("gfx/moneta.png")
+    playerImg = love.graphics.newImage("gfx/gracz.png")
 
     gracz = {
         x = math.max(0, math.min(100, szerokosc - 50)),
