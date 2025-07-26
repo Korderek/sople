@@ -134,6 +134,7 @@ function love.draw()
             "center")
         love.graphics.setColor(1, 1, 1)
         love.graphics.rectangle("fill", przyciskStart.x, przyciskStart.y, przyciskStart.width, przyciskStart.height, 10)
+        love.graphics.setColor(0, 0, 0)
         love.graphics.printf("LECIMY", font, przyciskStart.x, przyciskStart.y + 5, przyciskStart.width, "center")
     elseif stanGry == stan.gra then
         love.graphics.setColor(1, 1, 1)
