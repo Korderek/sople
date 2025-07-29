@@ -1,6 +1,6 @@
 local S = {}
 
-function S.update()
+function S.update(dt)
     local predkosc = 6
     for _, sopel in ipairs(sople) do
         sopel.y = sopel.y + predkosc

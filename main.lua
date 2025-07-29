@@ -1,6 +1,7 @@
 -- main.lua
 require("player")
 local sople2 = require("src.sople")
+local monety = require("src.monety")
 
 function love.load()
     szerokosc, wysokosc = love.graphics.getDimensions()
@@ -18,7 +19,6 @@ function love.load()
     sopelImg = love.graphics.newImage("gfx/sopel.png")
     serce = love.graphics.newImage("gfx/serce.png")
     pusteserce = love.graphics.newImage("gfx/pusteserce.png")
-    monetaImg = love.graphics.newImage("gfx/moneta.png")
     playerImg = love.graphics.newImage("gfx/gracz.png")
 
     gracz = {
@@ -36,17 +36,13 @@ function love.load()
         table.insert(sople, sople2.losowy())
     end
 
-    monety = {}
-    for i = 1, 3 do
-        table.insert(monety, losowaMoneta())
-    end
+    monety.spawn(3)
 
     zycia = 3
     niesmiertelny = 0
     wstrzasy = 0
     czas = 0
     punkty = 0
-    zebraneMonety = 0
     wynik_koniec = 0
 
     stan = { menu = {}, gra = {}, przegrana = {} }
@@ -55,15 +51,6 @@ function love.load()
     font = love.graphics.newFont(40)
     przyciskStart = { x = szerokosc / 2 - 100, y = wysokosc / 2, width = 200, height = 50 }
     przyciskTryb = { x = szerokosc / 2 - 100, y = wysokosc / 2 - 80, width = 200, height = 50 }
-end
-
-function losowaMoneta()
-    return {
-        x = love.math.random(0, szerokosc - 32),
-        y = love.math.random(-400, -50),
-        width = 32,
-        height = 32
-    }
 end
 
 function kolizja(a, b)
@@ -92,20 +79,8 @@ function love.update(dt)
 
     gracz.x = math.max(0, math.min(szerokosc - gracz.width, gracz.x))
 
-    sople2.update()
-
-    for _, m in ipairs(monety) do
-        m.y = m.y + 2
-        if m.y > wysokosc then
-            m.y = -50
-            m.x = love.math.random(0, szerokosc - m.width)
-        end
-        if kolizja(gracz, m) then
-            zebraneMonety = zebraneMonety + 1
-            m.y = -50
-            m.x = love.math.random(0, szerokosc - m.width)
-        end
-    end
+    sople2.update(dt)
+    monety.update(dt)
 
     if zycia < 1 and wstrzasy < 0 then
         wynik_koniec = punkty
@@ -145,9 +120,7 @@ function love.draw()
         rysujSerca()
         sople2.draw()
         player.draw()
-        for _, m in ipairs(monety) do
-            love.graphics.draw(monetaImg, m.x, m.y)
-        end
+        monety.draw()
         love.graphics.setColor(0, 0, 0)
         love.graphics.print("Punkty: " .. punkty, 10, 10)
         love.graphics.print("Monety: " .. zebraneMonety, 10, 50)
