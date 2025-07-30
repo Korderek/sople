@@ -13,16 +13,16 @@ function M.spawn(liczba_monet)
 end
 
 function M.update(dt)
-    for _, m in ipairs(monety) do
+    for i, m in ipairs(monety) do
         m.y = m.y + 2
         if m.y > wysokosc then
             -- Jeśli moneta spadnie poza ekran, generujemy nową
-            m = M.losowaMoneta()
+            monety[i] = M.losowaMoneta()
         end
         if kolizja(gracz, m) then
             -- Jeśli gracz zbierze monetę, zwiększamy licznik i generujemy nową
             zebraneMonety = zebraneMonety + 1
-            m = M.losowaMoneta()
+            monety[i] = M.losowaMoneta()
         end
     end
 end
