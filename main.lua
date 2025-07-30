@@ -20,6 +20,7 @@ function love.load()
     serce = love.graphics.newImage("gfx/serce.png")
     pusteserce = love.graphics.newImage("gfx/pusteserce.png")
     playerImg = love.graphics.newImage("gfx/gracz.png")
+    spioszekImg = love.graphics.newImage("gfx/spioszek.png")
 
     gracz = {
         x = math.max(0, math.min(100, szerokosc - 50)),
@@ -28,7 +29,8 @@ function love.load()
         height = 100,
         scale = 2.0,
         ox = 25,
-        oy = 100
+        oy = 100,
+        skin = "normalny"
     }
 
     sople = {}
@@ -79,7 +81,14 @@ function love.update(dt)
 
     gracz.x = math.max(0, math.min(szerokosc - gracz.width, gracz.x))
 
-    sople2.update(dt)
+    -- Zmiana skina na śpioszka po zebraniu 5 monet
+    if zebraneMonety >= 5 then
+        gracz.skin = "spioszek"
+    end
+
+    -- Przekazujemy info o śpioszku do sopli
+    local spioszek = (gracz.skin == "spioszek")
+    sople2.update(dt, spioszek)
     monety.update(dt)
 
     if zycia < 1 and wstrzasy < 0 then
@@ -114,6 +123,11 @@ function love.draw()
     elseif stanGry == stan.gra then
         love.graphics.setColor(1, 1, 1)
         love.graphics.clear(czerwien, 0.8, 1, 1)
+        if gracz.skin == "spioszek" then
+            love.graphics.setColor(1, 1, 1, 0.4)
+            love.graphics.rectangle("fill", 0, 0, szerokosc, wysokosc)
+            love.graphics.setColor(1, 1, 1)
+        end
         if wstrzasy > 0 then
             love.graphics.translate(love.math.random(-10, 10), love.math.random(-10, 10))
         end
