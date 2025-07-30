@@ -30,7 +30,7 @@ function love.load()
         scale = 2.0,
         ox = 25,
         oy = 100,
-        skin = "normalny"
+        skin = playerImg
     }
 
     sople = {}
@@ -82,12 +82,12 @@ function love.update(dt)
     gracz.x = math.max(0, math.min(szerokosc - gracz.width, gracz.x))
 
     -- Zmiana skina na śpioszka po zebraniu 5 monet
-    if zebraneMonety >= 5 then
-        gracz.skin = "spioszek"
+    if zebraneMonety >= 1 then
+        gracz.skin = spioszekImg
     end
 
     -- Przekazujemy info o śpioszku do sopli
-    local spioszek = (gracz.skin == "spioszek")
+    local spioszek = (gracz.skin == spioszekImg)
     sople2.update(dt, spioszek)
     monety.update(dt)
 
@@ -123,18 +123,24 @@ function love.draw()
     elseif stanGry == stan.gra then
         love.graphics.setColor(1, 1, 1)
         love.graphics.clear(czerwien, 0.8, 1, 1)
-        if gracz.skin == "spioszek" then
-            love.graphics.setColor(1, 1, 1, 0.4)
-            love.graphics.rectangle("fill", 0, 0, szerokosc, wysokosc)
-            love.graphics.setColor(1, 1, 1)
-        end
         if wstrzasy > 0 then
             love.graphics.translate(love.math.random(-10, 10), love.math.random(-10, 10))
         end
         rysujSerca()
         sople2.draw()
-        player.draw()
         monety.draw()
+        --jeżeli gracz jest śpioszkiem, to przyciemniamy ekran
+        if gracz.skin == spioszekImg then
+            love.graphics.stencil(function()
+                love.graphics.circle("fill", gracz.x + gracz.ox, gracz.y + gracz.oy, 150)
+            end, "replace", 1)
+            love.graphics.setStencilTest("less", 1)
+            love.graphics.setColor(0, 0, 0, 0.9)
+            love.graphics.rectangle("fill", -szerokosc / 5, -wysokosc / 5, szerokosc * 5, wysokosc * 5)
+            love.graphics.setColor(1, 1, 1, 0.25)
+            love.graphics.setStencilTest()
+        end
+        player.draw()
         love.graphics.setColor(0, 0, 0)
         love.graphics.print("Punkty: " .. punkty, 10, 10)
         love.graphics.print("Monety: " .. zebraneMonety, 10, 50)
