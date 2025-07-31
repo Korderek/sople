@@ -7,6 +7,7 @@ local lewy_przycisk = {
 }
 local x, y = love.mouse.getPosition()
 
+-- Aktualizuje stan przycisków myszy
 function UI.update()
     x, y = love.mouse.getPosition()
 
@@ -16,6 +17,7 @@ function UI.update()
     lewy_przycisk.wcisniety = love.mouse.isDown(1)
 end
 
+-- Rysuje przycisk z tekstem, zwraca true jeśli został kliknięty
 function UI.przycisk(wymiary, tekst)
     local r, g, b, a = love.graphics.getColor() -- zapamiętujemy aktualny kolor
     local mysz_na_przycisku = kolizja({ x = x, y = y, width = 1, height = 1 }, wymiary)
@@ -36,6 +38,21 @@ function UI.przycisk(wymiary, tekst)
     love.graphics.setColor(r, g, b, a) -- przywracamy poprzedni kolor
 
     return mysz_na_przycisku and lewy_przycisk.klikniety
+end
+
+-- Rysuje serca w prawym górnym rogu ekranu
+function UI.rysujSerca()
+    local skala = 0.05
+    local rozmiar = 555 * skala
+    for i = 1, 3 do
+        local x = szerokosc - i * (rozmiar + 5)
+        local y = 10
+        if i <= zycia then
+            love.graphics.draw(serce, x, y, 0, skala, skala)
+        else
+            love.graphics.draw(pusteserce, x, y, 0, skala, skala)
+        end
+    end
 end
 
 return UI

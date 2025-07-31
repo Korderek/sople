@@ -1,7 +1,8 @@
-local S = {}
+local Sople = {}
 
 -- Lista wszystkich sopli
-local sople = {}
+local listaSopli = {}
+
 -- Grafika dla sopli
 local sopelImg = love.graphics.newImage("gfx/sopel.png")
 
@@ -11,22 +12,23 @@ local czas_ostatniego_dodania = 0
 local predkosc = 6
 
 -- Spawnuje określoną liczbę sopli
-function S.spawn(ilosc)
+function Sople.spawn(ilosc)
     ilosc = ilosc or 1
     for i = 1, ilosc do
-        table.insert(sople, S.losowy())
+        table.insert(listaSopli, Sople.losowy())
     end
 end
 
-function S.update(dt)
+-- Przemieszcza sople i sprawdza kolizje z graczem
+function Sople.update(dt)
     czas = czas + dt
 
     if czas - czas_ostatniego_dodania >= szybkosci_dodawania[aktualny_poziom] then
-        table.insert(sople, S.losowy())
+        table.insert(listaSopli, Sople.losowy())
         czas_ostatniego_dodania = czas
     end
 
-    for _, sopel in ipairs(sople) do
+    for _, sopel in ipairs(listaSopli) do
         sopel.y = sopel.y + predkosc
         if sopel.y > wysokosc then
             sopel.y = -100
@@ -40,13 +42,14 @@ function S.update(dt)
     end
 end
 
-function S.draw()
-    for _, sopel in ipairs(sople) do
+-- Rysuje wszystkie sople
+function Sople.draw()
+    for _, sopel in ipairs(listaSopli) do
         love.graphics.draw(sopelImg, sopel.x, sopel.y)
     end
 end
 
-function S.losowy()
+function Sople.losowy()
     return {
         x = love.math.random(0, szerokosc - sopelImg:getWidth()),
         y = love.math.random(-600, -50),
@@ -55,4 +58,4 @@ function S.losowy()
     }
 end
 
-return S
+return Sople

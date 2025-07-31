@@ -1,9 +1,12 @@
--- main.lua
-local monety = require("src.monety")
-local sople = require("src.sople")
-local player = require("src.player")
-local ui = require("src.ui")
+-- Import modułów
+local Monety = require("src.monety")
+local Player = require("src.player")
+local Sople = require("src.sople")
+local UI = require("src.ui")
 
+---------------------
+-- Wczytywanie gry
+---------------------
 function love.load()
     szerokosc, wysokosc = love.graphics.getDimensions()
 
@@ -30,10 +33,10 @@ function love.load()
     }
 
     local ilosc_sopli = 5
-    sople.spawn(ilosc_sopli)
+    Sople.spawn(ilosc_sopli)
 
     local ilosc_monet = 3
-    monety.spawn(ilosc_monet)
+    Monety.spawn(ilosc_monet)
 
     zycia = 3
     niesmiertelny = 0
@@ -53,9 +56,12 @@ function love.load()
     przyciskTryb = { x = szerokosc / 2 - 100, y = wysokosc / 2 - 80, width = 200, height = 50 }
 end
 
+---------------------
+-- Główna pętla gry
+---------------------
 function love.update(dt)
+    -- zamknij grę po naciśnięciu escape
     if love.keyboard.isDown("escape") then love.event.quit() end
-    ui.update()
 
     if stanGry == stan.gra then
         niesmiertelny = niesmiertelny - dt
@@ -76,23 +82,28 @@ function love.update(dt)
 
         -- Przekazujemy info o śpioszku do sopli
         local spioszek = (gracz.skin == spioszekImg)
-        sople.update(dt, spioszek)
-        monety.update(dt)
+        Sople.update(dt, spioszek)
+        Monety.update(dt)
 
         if zycia < 1 and wstrzasy < 0 then
             wynik_koniec = punkty
             stanGry = stan.przegrana
         end
     end
+
+    UI.update()
 end
 
+---------------------
+-- Rysowanie gry
+---------------------
 function love.draw()
     if stanGry == stan.menu then
         love.graphics.setBackgroundColor(0.5, 0.8, 1, 1)
-        if ui.przycisk(przyciskTryb, poziomy[aktualny_poziom]) then
+        if UI.przycisk(przyciskTryb, poziomy[aktualny_poziom]) then
             aktualny_poziom = aktualny_poziom % #poziomy + 1
         end
-        if ui.przycisk(przyciskStart, "LECIMY") then
+        if UI.przycisk(przyciskStart, "LECIMY") then
             stanGry = stan.gra
         end
     elseif stanGry == stan.gra then
@@ -101,9 +112,8 @@ function love.draw()
         if wstrzasy > 0 then
             love.graphics.translate(love.math.random(-10, 10), love.math.random(-10, 10))
         end
-        rysujSerca()
-        sople.draw()
-        monety.draw()
+        Sople.draw()
+        Monety.draw()
         --jeżeli gracz jest śpioszkiem, to przyciemniamy ekran
         if gracz.skin == spioszekImg then
             love.graphics.stencil(function()
@@ -115,7 +125,8 @@ function love.draw()
             love.graphics.setColor(1, 1, 1, 0.25)
             love.graphics.setStencilTest()
         end
-        player.draw()
+        Player.draw()
+        UI.rysujSerca()
         love.graphics.setColor(0, 0, 0)
         love.graphics.print("Punkty: " .. punkty, 10, 10)
         love.graphics.print("Monety: " .. zebraneMonety, 10, 50)
@@ -127,20 +138,11 @@ function love.draw()
     end
 end
 
+-----------------------
+-- Funkcje pomocnicze
+-----------------------
+
+-- Sprawdzenie kolizji dwóch prostokątów
 function kolizja(a, b)
     return a.x < b.x + b.width and a.x + a.width > b.x and a.y < b.y + b.height and a.y + a.height > b.y
-end
-
-function rysujSerca()
-    local skala = 0.05
-    local rozmiar = 555 * skala
-    for i = 1, 3 do
-        local x = szerokosc - i * (rozmiar + 5)
-        local y = 10
-        if i <= zycia then
-            love.graphics.draw(serce, x, y, 0, skala, skala)
-        else
-            love.graphics.draw(pusteserce, x, y, 0, skala, skala)
-        end
-    end
 end
