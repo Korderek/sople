@@ -1,7 +1,8 @@
 -- main.lua
-require("player")
-local sople = require("src.sople")
 local monety = require("src.monety")
+local sople = require("src.sople")
+local player = require("src.player")
+local ui = require("src.ui")
 
 function love.load()
     szerokosc, wysokosc = love.graphics.getDimensions()
@@ -12,7 +13,6 @@ function love.load()
     szybkosci_tla = { 0.02, 0.05, 0.1 }
     czerwien = 0
 
-    sopelImg = love.graphics.newImage("gfx/sopel.png")
     serce = love.graphics.newImage("gfx/serce.png")
     pusteserce = love.graphics.newImage("gfx/pusteserce.png")
     playerImg = love.graphics.newImage("gfx/gracz.png")
@@ -47,52 +47,41 @@ function love.load()
     stanGry = stan.menu
 
     font = love.graphics.newFont(40)
+    love.graphics.setFont(font)
+
     przyciskStart = { x = szerokosc / 2 - 100, y = wysokosc / 2, width = 200, height = 50 }
     przyciskTryb = { x = szerokosc / 2 - 100, y = wysokosc / 2 - 80, width = 200, height = 50 }
 end
 
-function kolizja(a, b)
-    return a.x < b.x + b.width and a.x + a.width > b.x and a.y < b.y + b.height and a.y + a.height > b.y
-end
-
 function love.update(dt)
-    if stanGry ~= stan.gra then return end
-
-    niesmiertelny = niesmiertelny - dt
-    wstrzasy = wstrzasy - dt
-
-    czerwien = math.min(1, czerwien + dt * szybkosci_tla[aktualny_poziom])
-    punkty = math.floor(czas)
-
-    if love.keyboard.isDown("a") then gracz.x = gracz.x - 3 end
-    if love.keyboard.isDown("d") then gracz.x = gracz.x + 3 end
-
     if love.keyboard.isDown("escape") then love.event.quit() end
+    ui.update()
 
-    gracz.x = math.max(0, math.min(szerokosc - gracz.width, gracz.x))
+    if stanGry == stan.gra then
+        niesmiertelny = niesmiertelny - dt
+        wstrzasy = wstrzasy - dt
 
-    -- Zmiana skina na śpioszka po zebraniu 5 monet
-    if zebraneMonety >= 1 then
-        gracz.skin = spioszekImg
-    end
+        czerwien = math.min(1, czerwien + dt * szybkosci_tla[aktualny_poziom])
+        punkty = math.floor(czas)
 
-    -- Przekazujemy info o śpioszku do sopli
-    local spioszek = (gracz.skin == spioszekImg)
-    sople.update(dt, spioszek)
-    monety.update(dt)
+        if love.keyboard.isDown("a") then gracz.x = gracz.x - 3 end
+        if love.keyboard.isDown("d") then gracz.x = gracz.x + 3 end
 
-    if zycia < 1 and wstrzasy < 0 then
-        wynik_koniec = punkty
-        stanGry = stan.przegrana
-    end
-end
+        gracz.x = math.max(0, math.min(szerokosc - gracz.width, gracz.x))
 
-function love.mousepressed(x, y, button)
-    if button == 1 and stanGry == stan.menu then
-        if kolizja({ x = x, y = y, width = 1, height = 1 }, przyciskStart) then
-            stanGry = stan.gra
-        elseif kolizja({ x = x, y = y, width = 1, height = 1 }, przyciskTryb) then
-            aktualny_poziom = aktualny_poziom % #poziomy + 1
+        -- Zmiana skina na śpioszka po zebraniu 5 monet
+        if zebraneMonety >= 1 then
+            gracz.skin = spioszekImg
+        end
+
+        -- Przekazujemy info o śpioszku do sopli
+        local spioszek = (gracz.skin == spioszekImg)
+        sople.update(dt, spioszek)
+        monety.update(dt)
+
+        if zycia < 1 and wstrzasy < 0 then
+            wynik_koniec = punkty
+            stanGry = stan.przegrana
         end
     end
 end
@@ -100,16 +89,12 @@ end
 function love.draw()
     if stanGry == stan.menu then
         love.graphics.setBackgroundColor(0.5, 0.8, 1, 1)
-        love.graphics.setFont(font)
-        love.graphics.setColor(1, 1, 1)
-        love.graphics.rectangle("fill", przyciskTryb.x, przyciskTryb.y, przyciskTryb.width, przyciskTryb.height, 10)
-        love.graphics.setColor(0, 0, 0)
-        love.graphics.printf(poziomy[aktualny_poziom], font, przyciskTryb.x, przyciskTryb.y + 5, przyciskTryb.width,
-            "center")
-        love.graphics.setColor(1, 1, 1)
-        love.graphics.rectangle("fill", przyciskStart.x, przyciskStart.y, przyciskStart.width, przyciskStart.height, 10)
-        love.graphics.setColor(0, 0, 0)
-        love.graphics.printf("LECIMY", font, przyciskStart.x, przyciskStart.y + 5, przyciskStart.width, "center")
+        if ui.przycisk(przyciskTryb, poziomy[aktualny_poziom]) then
+            aktualny_poziom = aktualny_poziom % #poziomy + 1
+        end
+        if ui.przycisk(przyciskStart, "LECIMY") then
+            stanGry = stan.gra
+        end
     elseif stanGry == stan.gra then
         love.graphics.setColor(1, 1, 1)
         love.graphics.clear(czerwien, 0.8, 1, 1)
@@ -135,12 +120,15 @@ function love.draw()
         love.graphics.print("Punkty: " .. punkty, 10, 10)
         love.graphics.print("Monety: " .. zebraneMonety, 10, 50)
     elseif stanGry == stan.przegrana then
-        love.graphics.setFont(font)
         love.graphics.setColor(0, 0, 0)
         love.graphics.printf("Sople Cie pociely. Boli?", font, 0, wysokosc / 2 - 20, szerokosc, "center")
         love.graphics.printf("Wynik: " .. wynik_koniec, font, 0, wysokosc / 2 + 40, szerokosc, "center")
         love.graphics.printf("Monety: " .. zebraneMonety, font, 0, wysokosc / 2 + 80, szerokosc, "center")
     end
+end
+
+function kolizja(a, b)
+    return a.x < b.x + b.width and a.x + a.width > b.x and a.y < b.y + b.height and a.y + a.height > b.y
 end
 
 function rysujSerca()

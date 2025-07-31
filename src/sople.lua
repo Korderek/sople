@@ -7,8 +7,8 @@ local sopelImg = love.graphics.newImage("gfx/sopel.png")
 
 -- Stopery
 local czas = 0
-local czas_dodawania_sopli = 5
 local czas_ostatniego_dodania = 0
+local predkosc = 6
 
 -- Spawnuje określoną liczbę sopli
 function S.spawn(ilosc)
@@ -20,12 +20,9 @@ end
 
 function S.update(dt)
     czas = czas + dt
-    czas_ostatniego_dodania = czas_ostatniego_dodania + dt
-
-    local predkosc = 6
 
     if czas - czas_ostatniego_dodania >= szybkosci_dodawania[aktualny_poziom] then
-        table.insert(sople, sople2.losowy())
+        table.insert(sople, S.losowy())
         czas_ostatniego_dodania = czas
     end
 
