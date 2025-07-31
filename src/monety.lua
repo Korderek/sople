@@ -2,8 +2,6 @@ local M = {}
 local monetaImg = love.graphics.newImage("gfx/moneta.png")
 local monety = {}
 
-zebraneMonety = 0
-
 -- Generuje przekazaną parametrem liczbę monet
 function M.spawn(liczba_monet)
     local liczba_monet = liczba_monet or 1

@@ -1,7 +1,34 @@
 local S = {}
 
+-- Lista wszystkich sopli
+local sople = {}
+-- Grafika dla sopli
+local sopelImg = love.graphics.newImage("gfx/sopel.png")
+
+-- Stopery
+local czas = 0
+local czas_dodawania_sopli = 5
+local czas_ostatniego_dodania = 0
+
+-- Spawnuje określoną liczbę sopli
+function S.spawn(ilosc)
+    ilosc = ilosc or 1
+    for i = 1, ilosc do
+        table.insert(sople, S.losowy())
+    end
+end
+
 function S.update(dt)
+    czas = czas + dt
+    czas_ostatniego_dodania = czas_ostatniego_dodania + dt
+
     local predkosc = 6
+
+    if czas - czas_ostatniego_dodania >= szybkosci_dodawania[aktualny_poziom] then
+        table.insert(sople, sople2.losowy())
+        czas_ostatniego_dodania = czas
+    end
+
     for _, sopel in ipairs(sople) do
         sopel.y = sopel.y + predkosc
         if sopel.y > wysokosc then

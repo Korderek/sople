@@ -1,14 +1,10 @@
 -- main.lua
 require("player")
-local sople2 = require("src.sople")
+local sople = require("src.sople")
 local monety = require("src.monety")
 
 function love.load()
     szerokosc, wysokosc = love.graphics.getDimensions()
-
-    ilosc_sopli = 5
-    czas_dodawania_sopli = 5
-    czas_ostatniego_dodania = 0
 
     poziomy = { "Latwy", "Trudny", "Niemozliwy" }
     aktualny_poziom = 1
@@ -33,12 +29,11 @@ function love.load()
         skin = playerImg
     }
 
-    sople = {}
-    for i = 1, ilosc_sopli do
-        table.insert(sople, sople2.losowy())
-    end
+    local ilosc_sopli = 5
+    sople.spawn(ilosc_sopli)
 
-    monety.spawn(3)
+    local ilosc_monet = 3
+    monety.spawn(ilosc_monet)
 
     zycia = 3
     niesmiertelny = 0
@@ -46,6 +41,7 @@ function love.load()
     czas = 0
     punkty = 0
     wynik_koniec = 0
+    zebraneMonety = 0
 
     stan = { menu = {}, gra = {}, przegrana = {} }
     stanGry = stan.menu
@@ -62,17 +58,11 @@ end
 function love.update(dt)
     if stanGry ~= stan.gra then return end
 
-    czas = czas + dt
     niesmiertelny = niesmiertelny - dt
     wstrzasy = wstrzasy - dt
 
     czerwien = math.min(1, czerwien + dt * szybkosci_tla[aktualny_poziom])
     punkty = math.floor(czas)
-
-    if czas - czas_ostatniego_dodania >= szybkosci_dodawania[aktualny_poziom] then
-        table.insert(sople, sople2.losowy())
-        czas_ostatniego_dodania = czas
-    end
 
     if love.keyboard.isDown("a") then gracz.x = gracz.x - 3 end
     if love.keyboard.isDown("d") then gracz.x = gracz.x + 3 end
@@ -88,7 +78,7 @@ function love.update(dt)
 
     -- Przekazujemy info o śpioszku do sopli
     local spioszek = (gracz.skin == spioszekImg)
-    sople2.update(dt, spioszek)
+    sople.update(dt, spioszek)
     monety.update(dt)
 
     if zycia < 1 and wstrzasy < 0 then
@@ -127,7 +117,7 @@ function love.draw()
             love.graphics.translate(love.math.random(-10, 10), love.math.random(-10, 10))
         end
         rysujSerca()
-        sople2.draw()
+        sople.draw()
         monety.draw()
         --jeżeli gracz jest śpioszkiem, to przyciemniamy ekran
         if gracz.skin == spioszekImg then
