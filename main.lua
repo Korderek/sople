@@ -1,8 +1,11 @@
 -- Import modułów
+local Efekty = require("src.efekty")
 local Monety = require("src.monety")
 local Player = require("src.player")
 local Sople = require("src.sople")
 local UI = require("src.ui")
+
+local flux = require("plugins.flux")
 
 ---------------------
 -- Wczytywanie gry
@@ -87,11 +90,12 @@ function love.update(dt)
 
         if zycia < 1 and wstrzasy < 0 then
             wynik_koniec = punkty
-            stanGry = stan.przegrana
+            Efekty.rozpocznijLadowanie(function() stanGry = stan.przegrana end)
         end
     end
 
     UI.update()
+    flux.update(dt)
 end
 
 ---------------------
@@ -104,28 +108,21 @@ function love.draw()
             aktualny_poziom = aktualny_poziom % #poziomy + 1
         end
         if UI.przycisk(przyciskStart, "LECIMY") then
-            stanGry = stan.gra
+            Efekty.rozpocznijLadowanie(function() stanGry = stan.gra end)
         end
+        Efekty.rysujLadowanie()
     elseif stanGry == stan.gra then
         love.graphics.setColor(1, 1, 1)
         love.graphics.clear(czerwien, 0.8, 1, 1)
-        if wstrzasy > 0 then
-            love.graphics.translate(love.math.random(-10, 10), love.math.random(-10, 10))
-        end
+        Efekty.wstrzasyZMoca(10) -- wszystko co znajdzie się poniżej będzie pod wpływem wstrząsów
         Sople.draw()
         Monety.draw()
         --jeżeli gracz jest śpioszkiem, to przyciemniamy ekran
         if gracz.skin == spioszekImg then
-            love.graphics.stencil(function()
-                love.graphics.circle("fill", gracz.x + gracz.ox, gracz.y + gracz.oy, 150)
-            end, "replace", 1)
-            love.graphics.setStencilTest("less", 1)
-            love.graphics.setColor(0, 0, 0, 0.9)
-            love.graphics.rectangle("fill", -szerokosc / 5, -wysokosc / 5, szerokosc * 5, wysokosc * 5)
-            love.graphics.setColor(1, 1, 1, 0.25)
-            love.graphics.setStencilTest()
+            Efekty.latarka(gracz.x + gracz.ox, gracz.y + gracz.oy)
         end
         Player.draw()
+        Efekty.rysujLadowanie()
         UI.rysujSerca()
         love.graphics.setColor(0, 0, 0)
         love.graphics.print("Punkty: " .. punkty, 10, 10)
@@ -135,6 +132,7 @@ function love.draw()
         love.graphics.printf("Sople Cie pociely. Boli?", font, 0, wysokosc / 2 - 20, szerokosc, "center")
         love.graphics.printf("Wynik: " .. wynik_koniec, font, 0, wysokosc / 2 + 40, szerokosc, "center")
         love.graphics.printf("Monety: " .. zebraneMonety, font, 0, wysokosc / 2 + 80, szerokosc, "center")
+        Efekty.rysujLadowanie()
     end
 end
 
