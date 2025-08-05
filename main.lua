@@ -41,7 +41,7 @@ function love.load()
     local ilosc_monet = 3
     Monety.spawn(ilosc_monet)
 
-    zycia = 3
+    zycia = 1
     niesmiertelny = 0
     wstrzasy = 0
     czas = 0
