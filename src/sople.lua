@@ -22,6 +22,7 @@ end
 -- Przemieszcza sople i sprawdza kolizje z graczem
 function Sople.update(dt)
     czas = czas + dt
+    punkty = math.floor(czas)
 
     if czas - czas_ostatniego_dodania >= szybkosci_dodawania[aktualny_poziom] then
         table.insert(listaSopli, Sople.losowy())
