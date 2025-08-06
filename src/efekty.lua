@@ -5,27 +5,34 @@ local Efekty = {}
 local ladowanieImg = love.graphics.newImage("gfx/ladowanie-2.png")
 local ladowanie = { x = 10000, w_trakcie = false }
 
+local latarkaImg = love.graphics.newImage("gfx/latarka.png")
+local latarkaTex = love.graphics.newCanvas()
+
 function Efekty.wstrzasyZMoca(moc)
     if wstrzasy > 0 then
         love.graphics.translate(love.math.random(-moc, moc), love.math.random(-moc, moc))
     end
 end
 
-function Efekty.latarka(x, y)
-    -- strzwórz szablon dla latarki, piksele białe nie zostaną zamalowane
-    local szablon = function()
-        love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.circle("fill", x, y, 150)
-    end
-    love.graphics.stencil(szablon, "replace", 1)
+function Efekty.koniecWstrzasow()
+    love.graphics.origin()
+end
 
-    -- wejdź w tryb szablonu
-    love.graphics.setStencilTest("less", 1)
-    -- zamaluj wszystko na czarno, szablon zablokuje okrąg wokół gracza
-    love.graphics.setColor(0, 0, 0, 0.8)
-    love.graphics.rectangle("fill", -szerokosc / 2, -wysokosc / 2, szerokosc * 2, wysokosc * 2)
-    -- opuść tryb szablonu
-    love.graphics.setStencilTest()
+function Efekty.latarka(x, y)
+    -- wygeneruj teksturę dla latarki - ciemne tło z obrazkiem światła w miejscu gracza
+    love.graphics.setCanvas(latarkaTex)
+    do
+        -- rysujemy teraz na latarkaTex
+        love.graphics.clear(0.2, 0.2, 0.2, 1) -- jak ciemno ma być poza latarką?
+        love.graphics.setBlendMode("add", "premultiplied")
+        love.graphics.draw(latarkaImg, x - latarkaImg:getWidth() / 2, y - latarkaImg:getHeight() / 2)
+    end -- wracamy do rysowania na głównym ekranie
+    love.graphics.setCanvas()
+
+    -- wyświetl teksturę w trybie 'multiply'
+    love.graphics.setBlendMode("multiply", "premultiplied")
+    love.graphics.draw(latarkaTex, 0, 0)
+    love.graphics.setBlendMode("alpha")
 end
 
 function Efekty.rozpocznijLadowanie(akcja)

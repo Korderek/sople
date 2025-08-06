@@ -114,14 +114,19 @@ function love.draw()
     elseif stanGry == stan.gra then
         love.graphics.setColor(1, 1, 1)
         love.graphics.clear(czerwien, 0.8, 1, 1)
-        Efekty.wstrzasyZMoca(10) -- wszystko co znajdzie się poniżej będzie pod wpływem wstrząsów
-        Sople.draw()
-        Monety.draw()
-        --jeżeli gracz jest śpioszkiem, to przyciemniamy ekran
-        if gracz.skin == spioszekImg then
-            Efekty.latarka(gracz.x + gracz.ox, gracz.y + gracz.oy)
-        end
-        Player.draw()
+
+        Efekty.wstrzasyZMoca(10)
+        do -- wszystko co będzie rysowane później będzie pod wpływem wstrząsów
+            Sople.draw()
+            Monety.draw()
+            --jeżeli gracz jest śpioszkiem, to przyciemniamy ekran
+            if gracz.skin == spioszekImg then
+                Efekty.latarka(gracz.x + gracz.ox, gracz.y + gracz.oy)
+            end
+            Player.draw()
+        end -- kończymy wstrząsy, żeby nie wpływały na rysowanie UI
+        Efekty.koniecWstrzasow()
+
         Efekty.rysujLadowanie()
         UI.rysujSerca()
         love.graphics.setColor(0, 0, 0)
