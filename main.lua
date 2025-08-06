@@ -13,12 +13,33 @@ local flux = require("plugins.flux")
 function love.load()
     szerokosc, wysokosc = love.graphics.getDimensions()
 
+    teksty = {
+        "Sople cię pocięły, boli?",
+        "Sople: 1, Ty: 0. Chcesz się zrewanżować?",
+        "W przyszłym życiu patrz więcej w górę.",
+        "Ups, sopel znalazł twój łeb.",
+        "To już koniec... znów przez sople.",
+        "Nie zdążyłeś nawet krzyknąć 'ajć'.",
+        "Kto by pomyślał, że lód może być tak śmiertelny?",
+        "Sopel pozdrawia twoje czoło.",
+        "A miałeś tak dobry plan...",
+        "To był szybki koniec, gratulacje.",
+        "Jak tam twoje unikanie sopli? Bo moje świetnie.",
+        "I znowu lodowa porażka...",
+        "Sopel trafił krytyka. Ty nie.",
+        "Twoja głowa spotkała się z fizyką.",
+        "Sople są zimne, ale ich intencje gorsze.",
+        "No dobra, to może teraz bez dotykania lodu?",
+        "Na szczęście to tylko gra... prawda?"
+    }
+    -- Inicjalizacja efektów
     poziomy = { "Latwy", "Trudny", "Niemozliwy" }
     aktualny_poziom = 1
     szybkosci_dodawania = { 5, 3, 1 }
     szybkosci_tla = { 0.02, 0.05, 0.1 }
     czerwien = 0
 
+    font = love.graphics.newFont("assets/fonts/font.ttf", 40)
     serce = love.graphics.newImage("gfx/serce.png")
     pusteserce = love.graphics.newImage("gfx/pusteserce.png")
     playerImg = love.graphics.newImage("gfx/gracz.png")
@@ -90,6 +111,7 @@ function love.update(dt)
 
         if zycia < 1 and wstrzasy < 0 then
             wynik_koniec = punkty
+            losowyTekst = teksty[love.math.random(#teksty)]
             Efekty.rozpocznijLadowanie(function() stanGry = stan.przegrana end)
         end
     end
@@ -134,7 +156,7 @@ function love.draw()
         love.graphics.print("Monety: " .. zebraneMonety, 10, 50)
     elseif stanGry == stan.przegrana then
         love.graphics.setColor(0, 0, 0)
-        love.graphics.printf("Sople Cie pociely. Boli?", font, 0, wysokosc / 2 - 20, szerokosc, "center")
+        love.graphics.printf(losowyTekst, font, 0, wysokosc / 2 - 20, szerokosc, "center")
         love.graphics.printf("Wynik: " .. wynik_koniec, font, 0, wysokosc / 2 + 40, szerokosc, "center")
         love.graphics.printf("Monety: " .. zebraneMonety, font, 0, wysokosc / 2 + 80, szerokosc, "center")
         Efekty.rysujLadowanie()
