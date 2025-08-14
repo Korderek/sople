@@ -6,6 +6,7 @@ local Sople = require("src.sople")
 local UI = require("src.ui")
 local Zapis = require("src.zapis")
 local Sklepik = require("src.sklepik")
+local Dialog = require("src.dialog")
 
 local flux = require("plugins.flux")
 
@@ -49,6 +50,15 @@ function love.load()
     pusteserce = love.graphics.newImage("gfx/pusteserce.png")
     playerImg = love.graphics.newImage("gfx/gracz.png")
     spioszekImg = love.graphics.newImage("gfx/spioszek.png")
+
+    Dialog.bohater("Janusz", "gfx/facet.png")
+    Dialog.bohater("Michał", "gfx/dziecko.png")
+    Dialog.wiadomosc("Janusz", "Daj 2 złote na Harnasia")
+    Dialog.wiadomosc("Michał", "Nie mam, ale mogę dać 1 złoty")
+    Dialog.wiadomosc("Janusz", "Daj 2 złote mistrzu")
+    Dialog.wiadomosc("Janusz", "miłego dnia")
+
+    dialogi = { spioszek = false, wprowadzenie = false }
 
     gracz = {
         x = math.max(0, math.min(100, szerokosc - 50)),
@@ -98,6 +108,8 @@ end
 function love.update(dt)
     if love.keyboard.isDown("escape") then love.event.quit() end
 
+    Dialog.update(dt)
+
     -- Jeśli sklepik otwarty, nie aktualizujemy gry
     if Sklepik.aktywny then
         UI.update()
@@ -117,6 +129,10 @@ function love.update(dt)
 
         if zebraneMonety >= 1 then
             gracz.skin = spioszekImg
+            if not dialogi.spioszek then
+                Dialog.wiadomosc("Janusz", "Dzięki za monety, teraz mogę kupić Harnasia!")
+                dialogi.spioszek = true
+            end
         end
         if najlepszy_wynik < punkty then
             najlepszy_wynik = punkty
@@ -195,6 +211,7 @@ function love.draw()
         love.graphics.printf("Monety: " .. zebraneMonety, font, 0, wysokosc / 2 + 120, szerokosc, "center")
         Efekty.rysujLadowanie()
     end
+    Dialog.draw()
 end
 
 function love.quit()
