@@ -9,3 +9,8 @@
 - [x] Dodaj różne fajne napisy na koniec gry, np: "Sople cię pocięły, boli?" "Sople: 1, Ty: 0. Chcesz się zrewanżować?" "W przyszłym życiu patrz więcej w górę." "Ups, sopel znalazł twój łeb."
 - [x] Monety trudno jest złapać, powinny mieć większe kolizje
 - [ ] Ładowanie czcionki
+- [ ] spadajacy sklep
+- [ ] wyswietl sklepik gdy zebrany spadajacy sklep
+- [ ] kilka opcji w sklepiku - szybkość, życia, lepszy skin
+- [ ] rzeczy w sklepie kosztuja monety i jest cena pokazana 
+- [ ] (trudne) na czas wizyty w sklepie gra sie zatrzymuje 

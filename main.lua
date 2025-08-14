@@ -5,7 +5,7 @@ local Player = require("src.player")
 local Sople = require("src.sople")
 local UI = require("src.ui")
 local Zapis = require("src.zapis")
-
+local Sklepik = require("src.sklepik")
 
 local flux = require("plugins.flux")
 
@@ -34,13 +34,16 @@ function love.load()
         "No dobra, to może teraz bez dotykania lodu?",
         "Na szczęście to tylko gra... prawda?"
     }
-    -- Inicjalizacja efektów
+
+    -- Ustawienia gry
     poziomy = { "Latwy", "Trudny", "Niemozliwy" }
     aktualny_poziom = 1
     szybkosci_dodawania = { 5, 3, 1 }
     szybkosci_tla = { 0.02, 0.05, 0.1 }
     czerwien = 0
 
+    -- Grafiki
+    sklepikImg = love.graphics.newImage("gfx/sklepik.png")
     font = love.graphics.newFont("assets/fonts/font.ttf", 40)
     serce = love.graphics.newImage("gfx/serce.png")
     pusteserce = love.graphics.newImage("gfx/pusteserce.png")
@@ -58,12 +61,15 @@ function love.load()
         skin = playerImg
     }
 
+    sklepik = { x = love.math.random(0, szerokosc - 50), y = -100, width = 50, height = 50 }
+
     local ilosc_sopli = 5
     Sople.spawn(ilosc_sopli)
 
     local ilosc_monet = 3
     Monety.spawn(ilosc_monet)
 
+    predkoscGracza = 3
     zycia = 1
     niesmiertelny = 0
     wstrzasy = 0
@@ -80,7 +86,6 @@ function love.load()
     stan = { menu = {}, gra = {}, przegrana = {} }
     stanGry = stan.menu
 
-    font = love.graphics.newFont(40)
     love.graphics.setFont(font)
 
     przyciskStart = { x = szerokosc / 2 - 100, y = wysokosc / 2, width = 200, height = 50 }
@@ -91,21 +96,25 @@ end
 -- Główna pętla gry
 ---------------------
 function love.update(dt)
-    -- zamknij grę po naciśnięciu escape
     if love.keyboard.isDown("escape") then love.event.quit() end
+
+    -- Jeśli sklepik otwarty, nie aktualizujemy gry
+    if Sklepik.aktywny then
+        UI.update()
+        flux.update(dt)
+        return
+    end
 
     if stanGry == stan.gra then
         niesmiertelny = niesmiertelny - dt
         wstrzasy = wstrzasy - dt
-
         czerwien = math.min(1, czerwien + dt * szybkosci_tla[aktualny_poziom])
 
-        if love.keyboard.isDown("a") then gracz.x = gracz.x - 3 end
-        if love.keyboard.isDown("d") then gracz.x = gracz.x + 3 end
+        if love.keyboard.isDown("a") then gracz.x = gracz.x - predkoscGracza end
+        if love.keyboard.isDown("d") then gracz.x = gracz.x + predkoscGracza end
 
         gracz.x = math.max(0, math.min(szerokosc - gracz.width, gracz.x))
 
-        -- Zmiana skina na śpioszka po zebraniu 5 monet
         if zebraneMonety >= 1 then
             gracz.skin = spioszekImg
         end
@@ -113,10 +122,21 @@ function love.update(dt)
             najlepszy_wynik = punkty
         end
 
-        -- Przekazujemy info o śpioszku do sopli
         local spioszek = (gracz.skin == spioszekImg)
         Sople.update(dt, spioszek)
         Monety.update(dt)
+
+        -- Ruch i kolizja sklepiku
+        sklepik.y = sklepik.y + 2
+        if sklepik.y > wysokosc then
+            sklepik.y = -100
+            sklepik.x = love.math.random(0, szerokosc - sklepik.width)
+        end
+        if kolizja(gracz, sklepik) then
+            Sklepik.otworz()
+            sklepik.y = -100
+            sklepik.x = love.math.random(0, szerokosc - sklepik.width)
+        end
 
         if zycia < 1 and wstrzasy < 0 then
             wynik_koniec = punkty
@@ -147,27 +167,26 @@ function love.draw()
         love.graphics.clear(czerwien, 0.8, 1, 1)
 
         Efekty.wstrzasyZMoca(10)
-        do -- wszystko co będzie rysowane później będzie pod wpływem wstrząsów
-            Sople.draw()
-            Monety.draw()
-            --jeżeli gracz jest śpioszkiem, to przyciemniamy ekran
-            if gracz.skin == spioszekImg then
-                Efekty.latarka(gracz.x + gracz.ox, gracz.y + gracz.oy)
-            end
-            Player.draw()
-        end -- kończymy wstrząsy, żeby nie wpływały na rysowanie UI
+        Sople.draw()
+        Monety.draw()
+        if not Sklepik.aktywny then
+            love.graphics.draw(sklepikImg, sklepik.x, sklepik.y)
+        end
+        if gracz.skin == spioszekImg then
+            Efekty.latarka(gracz.x + gracz.ox, gracz.y + gracz.oy)
+        end
+        Player.draw()
         Efekty.koniecWstrzasow()
 
         Efekty.rysujLadowanie()
         UI.rysujSerca()
-        love.graphics.setColor(0, 0, 0)
-        if gracz.skin == spioszekImg then
-            love.graphics.setColor(1, 1, 1)
-        end
 
+        love.graphics.setColor(0, 0, 0)
         love.graphics.print("Punkty: " .. punkty, 10, 10)
         love.graphics.print("Najlepszy wynik: " .. najlepszy_wynik, 10, 50)
         love.graphics.print("Monety: " .. zebraneMonety, 10, 90)
+
+        Sklepik.draw()
     elseif stanGry == stan.przegrana then
         love.graphics.setColor(0, 0, 0)
         love.graphics.printf(losowyTekst, font, 0, wysokosc / 2 - 20, szerokosc, "center")
@@ -185,8 +204,9 @@ end
 -----------------------
 -- Funkcje pomocnicze
 -----------------------
-
--- Sprawdzenie kolizji dwóch prostokątów
 function kolizja(a, b)
-    return a.x < b.x + b.width and a.x + a.width > b.x and a.y < b.y + b.height and a.y + a.height > b.y
+    return a.x < b.x + b.width and
+        a.x + a.width > b.x and
+        a.y < b.y + b.height and
+        a.y + a.height > b.y
 end

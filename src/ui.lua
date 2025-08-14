@@ -34,7 +34,8 @@ function UI.przycisk(wymiary, tekst)
     end
     love.graphics.rectangle("fill", wymiary.x, wymiary.y, wymiary.width, wymiary.height, 10)
     love.graphics.setColor(0, 0, 0)
-    love.graphics.printf(tekst, font, wymiary.x, wymiary.y + 5, wymiary.width, "center")
+    love.graphics.printf(tekst, font, wymiary.x, wymiary.y + wymiary.height / 2 - font:getHeight() / 2, wymiary.width,
+        "center")
     love.graphics.setColor(r, g, b, a) -- przywracamy poprzedni kolor
 
     return mysz_na_przycisku and lewy_przycisk.klikniety
