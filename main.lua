@@ -127,13 +127,7 @@ function love.update(dt)
 
         gracz.x = math.max(0, math.min(szerokosc - gracz.width, gracz.x))
 
-        if zebraneMonety >= 1 then
-            gracz.skin = spioszekImg
-            if not dialogi.spioszek then
-                Dialog.wiadomosc("Janusz", "Dzięki za monety, teraz mogę kupić Harnasia!")
-                dialogi.spioszek = true
-            end
-        end
+
         if najlepszy_wynik < punkty then
             najlepszy_wynik = punkty
         end
