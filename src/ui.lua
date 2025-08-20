@@ -63,7 +63,7 @@ function UI.przycisk_swiat(x, y, grafika, tekst)
     end
     love.graphics.rectangle("fill", wymiary.x, wymiary.y, wymiary.width, wymiary.height, 10)
     love.graphics.setColor(0, 0, 0)
-    love.graphics.printf(tekst, font, wymiary.x, wymiary.y + wymiary.height + font:getHeight() / 2e, wymiary.width,
+    love.graphics.printf(tekst, font, wymiary.x, wymiary.y + wymiary.height + font:getHeight() / 2, wymiary.width,
         "center")
 
     love.graphics.setColor(1, 1, 1)
