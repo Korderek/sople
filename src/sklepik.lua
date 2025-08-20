@@ -1,4 +1,5 @@
 local UI = require("src.ui")
+local Dialog = require("src.dialog")
 
 local Sklepik = {
     aktywny = false,
@@ -11,6 +12,15 @@ local Sklepik = {
 
 function Sklepik.otworz()
     Sklepik.aktywny = true
+
+    local powitanie = {
+        "Witaj w sklepiku!",
+        "Czego Ci potrzeba?",
+        "Tanio i dobrze, rozejrzyj się i kupuj!",
+        "Witaj, mam dla Ciebie kilka nowości!",
+    }
+    Dialog.kolejka = {} -- zamykamy wyświetlone wiadomości
+    Dialog.wiadomosc("Sprzedawca", powitanie[love.math.random(1, #powitanie)])
 end
 
 function Sklepik.zamknij()

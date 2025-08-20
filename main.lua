@@ -54,8 +54,12 @@ function love.load()
     playerImg = love.graphics.newImage("gfx/gracz.png")
     spioszekImg = love.graphics.newImage("gfx/spioszek.png")
 
+    -- Portrety do dialogów
     Dialog.bohater("Janusz", "gfx/portrety/facet.png")
     Dialog.bohater("Michał", "gfx/portrety/dziecko.png")
+    Dialog.bohater("Sprzedawca", "gfx/portrety/sprzedawca.png")
+
+    -- Dialog początkowy
     Dialog.wiadomosc("Janusz", "Daj 2 złote na Harnasia")
     Dialog.wiadomosc("Michał", "Nie mam, ale mogę dać 1 złoty")
     Dialog.wiadomosc("Janusz", "Daj 2 złote mistrzu")
@@ -147,12 +151,12 @@ function love.update(dt)
         -- Ruch i kolizja sklepiku
         sklepik.y = sklepik.y + 2
         if sklepik.y > wysokosc then
-            sklepik.y = -100
+            sklepik.y = -sklepikImg:getHeight()
             sklepik.x = love.math.random(0, szerokosc - sklepik.width)
         end
         if kolizja(gracz, sklepik) then
             Sklepik.otworz()
-            sklepik.y = -100
+            sklepik.y = -sklepikImg:getHeight()
             sklepik.x = love.math.random(0, szerokosc - sklepik.width)
         end
 
