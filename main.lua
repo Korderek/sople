@@ -44,13 +44,14 @@ function love.load()
     szybkosci_tla = { 0.02, 0.05, 0.1 }
     czerwien = 0
 
-    debug = true -- włącz debugowanie
+    debug = false -- włącz debugowanie
 
     -- Grafiki
     sklepikImg = love.graphics.newImage("gfx/sklepik.png")
     font = love.graphics.newFont("assets/fonts/font.ttf", 40)
     serce = love.graphics.newImage("gfx/serce.png")
     pusteserce = love.graphics.newImage("gfx/pusteserce.png")
+    stosMonetImg = love.graphics.newImage("gfx/stos-monet.png")
     playerImg = love.graphics.newImage("gfx/gracz.png")
     spioszekImg = love.graphics.newImage("gfx/spioszek.png")
 
@@ -74,7 +75,9 @@ function love.load()
         height = 80,
         scale = 1.0,
         skin = playerImg,
-        kierunek = "prawo"
+        kierunek = "prawo",
+        przyspieszenie = 0,
+        predkosc = 0,
     }
 
     sklepik = { x = love.math.random(0, szerokosc - 50), y = -100, width = 100, height = 100 }
@@ -86,7 +89,7 @@ function love.load()
     Monety.spawn(ilosc_monet)
 
     predkoscGracza = 3
-    zycia = 1
+    zycia = 2
     niesmiertelny = 0
     wstrzasy = 0
     czas = 0
@@ -94,6 +97,7 @@ function love.load()
     najlepszy_wynik = 0
     wynik_koniec = 0
     zebraneMonety = 0
+    unik = 0
 
     zapisek = Zapis.wczytaj()
     najlepszy_wynik = zapisek.najlepszy_wynik
@@ -126,16 +130,27 @@ function love.update(dt)
     if stanGry == stan.gra then
         niesmiertelny = niesmiertelny - dt
         wstrzasy = wstrzasy - dt
+        unik = unik - dt
         czerwien = math.min(1, czerwien + dt * szybkosci_tla[aktualny_poziom])
 
+        gracz.przyspieszenie = 0
         if love.keyboard.isDown("a") then
-            gracz.x = gracz.x - predkoscGracza
+            gracz.przyspieszenie = -2
             gracz.kierunek = "lewo"
         end
         if love.keyboard.isDown("d") then
-            gracz.x = gracz.x + predkoscGracza
+            gracz.przyspieszenie = 2
             gracz.kierunek = "prawo"
         end
+        if love.keyboard.isDown("s") and unik < 0 then
+            unik = 0.15
+        end
+        if unik > 0 then
+            gracz.przyspieszenie = gracz.kierunek == "prawo" and 8 or -8
+        end
+
+        gracz.predkosc = gracz.predkosc * 0.8 + gracz.przyspieszenie
+        gracz.x = gracz.x + gracz.predkosc
 
         gracz.x = math.max(0, math.min(szerokosc - gracz.width, gracz.x))
 
@@ -192,7 +207,7 @@ function love.draw()
             love.graphics.rectangleDebug(sklepik.x, sklepik.y, sklepik.width, sklepik.height)
         end
         if gracz.skin == spioszekImg then
-            Efekty.latarka(gracz.x + gracz.ox, gracz.y + gracz.oy)
+            Efekty.latarka(gracz.x + gracz.width / 2, gracz.y + gracz.height / 2)
         end
         Player.draw()
         Efekty.koniecWstrzasow()
@@ -201,7 +216,10 @@ function love.draw()
         love.graphics.setColor(0, 0, 0)
         love.graphics.print("Punkty: " .. punkty, 10, 10)
         love.graphics.print("Najlepszy wynik: " .. najlepszy_wynik, 10, 50)
-        love.graphics.print("Monety: " .. zebraneMonety, 10, 90)
+
+        love.graphics.print(zebraneMonety, szerokosc / 2, 20)
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.draw(stosMonetImg, szerokosc / 2 - 80, 20)
 
         Sklepik.draw()
     elseif stanGry == stan.przegrana then
@@ -209,6 +227,7 @@ function love.draw()
         love.graphics.printf(losowyTekst, font, 0, wysokosc / 2 - 20, szerokosc, "center")
         love.graphics.printf("Wynik: " .. wynik_koniec, font, 0, wysokosc / 2 + 40, szerokosc, "center")
         love.graphics.printf("Najlepszy wynik: " .. najlepszy_wynik, font, 0, wysokosc / 2 + 80, szerokosc, "center")
+
         love.graphics.printf("Monety: " .. zebraneMonety, font, 0, wysokosc / 2 + 120, szerokosc, "center")
     elseif stanGry == stan.swiaty then
         love.graphics.setColor(1, 1, 1)
@@ -216,9 +235,8 @@ function love.draw()
         Swiaty.draw()
     end
 
-
-    Efekty.rysujLadowanie()
     Dialog.draw()
+    Efekty.rysujLadowanie()
 end
 
 function love.quit()

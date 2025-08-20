@@ -25,6 +25,7 @@ end
 
 function Sklepik.zamknij()
     Sklepik.aktywny = false
+    Dialog.wyczysc()
 end
 
 function Sklepik.draw()
