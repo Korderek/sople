@@ -1,6 +1,6 @@
 local Swiaty = {}
 local UI = require("src.ui")
-local planetafacet = love.graphics.newImage("gfx/portrety/facet.png")
+local planetafacet = love.graphics.newImage("gfx/gracz.png")
 function Swiaty.draw()
     -- Rysowanie świata
     love.graphics.setColor(1, 1, 1)

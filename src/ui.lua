@@ -1,4 +1,5 @@
 local UI = {}
+local Shader = require("src.shader")
 
 local lewy_przycisk = {
     puszczony = true,
@@ -53,19 +54,17 @@ function UI.przycisk_swiat(x, y, grafika, nazwa)
     local mysz_na_przycisku = kolizja({ x = mysz_x, y = mysz_y, width = 1, height = 1 }, wymiary)
     local nazwa = nazwa or ""
 
-    -- rysujemy przycisk
-    love.graphics.setColor(1, 1, 1, 1) -- przycisk normalny
-    love.graphics.drawCentered(grafika, wymiary.x, wymiary.y, wymiary.width, wymiary.height)
-    -- rysujemy białą ramkę
+    local grubosc = 0
     if mysz_na_przycisku then
         if lewy_przycisk.puszczony then
-            love.graphics.setLineWidth(8)  -- przycisk najechany
+            grubosc = 30
         else
-            love.graphics.setLineWidth(15) -- przycisk wciśnięty
+            grubosc = 50
         end
-        love.graphics.rectangle("line", wymiary.x, wymiary.y, wymiary.width, wymiary.height)
-        love.graphics.setLineWidth(1)
     end
+    Shader.obramowanie(grubosc) -- rysuj grafikę z obwódką
+    love.graphics.drawCentered(grafika, wymiary.x, wymiary.y, wymiary.width, wymiary.height)
+    Shader.koniec()             -- wyłącz rysowanie obwódki
 
     love.graphics.setColor(0, 0, 0)
     love.graphics.printf(nazwa, font, wymiary.x, wymiary.y + wymiary.height + font:getHeight() / 2, wymiary.width,
