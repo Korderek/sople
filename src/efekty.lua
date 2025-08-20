@@ -2,7 +2,7 @@ local flux = require("plugins.flux")
 
 local Efekty = {}
 
-local ladowanieImg = love.graphics.newImage("gfx/ladowanie-2.png")
+local ladowanieImg = love.graphics.newImage("gfx/ladowanie.png")
 local ladowanie = { x = 10000, w_trakcie = false }
 
 local latarkaImg = love.graphics.newImage("gfx/latarka.png")
