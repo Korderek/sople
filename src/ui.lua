@@ -5,11 +5,11 @@ local lewy_przycisk = {
     wcisniety = false,
     klikniety = false,
 }
-local x, y = love.mouse.getPosition()
+local mysz_x, mysz_y = love.mouse.getPosition()
 
 -- Aktualizuje stan przycisków myszy
 function UI.update()
-    x, y = love.mouse.getPosition()
+    mysz_x, mysz_y = love.mouse.getPosition()
 
     lewy_przycisk.puszczony = not love.mouse.isDown(1)
     -- jesli teraz jest puszczony a wcześniej był wciśnięty, to kliknięty
@@ -20,7 +20,7 @@ end
 -- Rysuje przycisk z tekstem, zwraca true jeśli został kliknięty
 function UI.przycisk(wymiary, tekst)
     local r, g, b, a = love.graphics.getColor() -- zapamiętujemy aktualny kolor
-    local mysz_na_przycisku = kolizja({ x = x, y = y, width = 1, height = 1 }, wymiary)
+    local mysz_na_przycisku = kolizja({ x = mysz_x, y = mysz_y, width = 1, height = 1 }, wymiary)
     local tekst = tekst or ""
 
     -- rysujemy przycisk
@@ -41,33 +41,36 @@ function UI.przycisk(wymiary, tekst)
     return mysz_na_przycisku and lewy_przycisk.klikniety
 end
 
-function UI.przycisk_swiat(x, y, grafika, tekst)
+function UI.przycisk_swiat(x, y, grafika, nazwa)
+    local r, g, b, a = love.graphics.getColor() -- zapamiętujemy aktualny kolor
+
     local wymiary = {
         x = x,
         y = y,
         width = grafika:getWidth(),
         height = grafika:getHeight()
     }
-    local r, g, b, a = love.graphics.getColor() -- zapamiętujemy aktualny kolor
-    local mysz_na_przycisku = kolizja({ x = x, y = y, width = 1, height = 1 }, wymiary)
-    local tekst = tekst or ""
+    local mysz_na_przycisku = kolizja({ x = mysz_x, y = mysz_y, width = 1, height = 1 }, wymiary)
+    local nazwa = nazwa or ""
 
     -- rysujemy przycisk
     love.graphics.setColor(1, 1, 1, 1) -- przycisk normalny
+    love.graphics.drawCentered(grafika, wymiary.x, wymiary.y, wymiary.width, wymiary.height)
+    -- rysujemy białą ramkę
     if mysz_na_przycisku then
         if lewy_przycisk.puszczony then
-            love.graphics.setColor(0.8, 0.8, 0.8) -- przycisk najechany
+            love.graphics.setLineWidth(8)  -- przycisk najechany
         else
-            love.graphics.setColor(0.7, 0.7, 0.7) -- przycisk wciśnięty
+            love.graphics.setLineWidth(15) -- przycisk wciśnięty
         end
+        love.graphics.rectangle("line", wymiary.x, wymiary.y, wymiary.width, wymiary.height)
+        love.graphics.setLineWidth(1)
     end
-    love.graphics.rectangle("fill", wymiary.x, wymiary.y, wymiary.width, wymiary.height, 10)
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.printf(tekst, font, wymiary.x, wymiary.y + wymiary.height + font:getHeight() / 2, wymiary.width,
-        "center")
 
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.printf(nazwa, font, wymiary.x, wymiary.y + wymiary.height + font:getHeight() / 2, wymiary.width,
+        "center")
     love.graphics.setColor(1, 1, 1)
-    love.graphics.drawCentered(grafika, wymiary.x, wymiary.y, wymiary.width, wymiary.height)
     love.graphics.setColor(r, g, b, a) -- przywracamy poprzedni kolor
 
     return mysz_na_przycisku and lewy_przycisk.klikniety

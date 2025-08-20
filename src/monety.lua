@@ -41,8 +41,8 @@ function Monety.losowaMoneta()
         -- Losowa pozycja x i y dla nowej monety
         x = love.math.random(0, szerokosc - 32),
         y = love.math.random(-400, -50),
-        width = 64,
-        height = 64
+        width = 80,
+        height = 80
     }
 end
 

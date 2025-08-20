@@ -77,7 +77,7 @@ function love.load()
         kierunek = "prawo"
     }
 
-    sklepik = { x = love.math.random(0, szerokosc - 50), y = -100, width = 50, height = 50 }
+    sklepik = { x = love.math.random(0, szerokosc - 50), y = -100, width = 100, height = 100 }
 
     local ilosc_sopli = 5
     Sople.spawn(ilosc_sopli)
@@ -115,11 +115,11 @@ function love.update(dt)
     if love.keyboard.isDown("escape") then love.event.quit() end
 
     Dialog.update(dt)
+    UI.update()
+    flux.update(dt)
 
     -- Jeśli sklepik otwarty, nie aktualizujemy gry
     if Sklepik.aktywny then
-        UI.update()
-        flux.update(dt)
         return
     end
 
@@ -166,9 +166,6 @@ function love.update(dt)
             Efekty.rozpocznijLadowanie(function() stanGry = stan.przegrana end)
         end
     end
-
-    UI.update()
-    flux.update(dt)
 end
 
 ---------------------
