@@ -77,10 +77,11 @@ end
 
 -- Rysuje serca w prawym górnym rogu ekranu
 function UI.rysujSerca()
-    local skala = 0.05
-    local rozmiar = 555 * skala
+    local skala = 1.0
+    local rozmiar = skala * serce:getWidth()
+    local x = szerokosc - 5
     for i = 1, 3 do
-        local x = szerokosc - i * (rozmiar + 5)
+        x = x - rozmiar - 5
         local y = 10
         if i <= zycia then
             love.graphics.draw(serce, x, y, 0, skala, skala)
