@@ -65,12 +65,10 @@ function love.load()
 
     gracz = {
         x = math.max(0, math.min(100, szerokosc - 50)),
-        y = 970,
+        y = 900,
         width = 50,
-        height = 100,
+        height = 80,
         scale = 1.0,
-        ox = 25,
-        oy = 100,
         skin = playerImg,
         kierunek = "prawo"
     }
@@ -237,8 +235,10 @@ function kolizja(a, b)
 end
 
 -- Rysuje obrazek na środku prostokąta
-function love.graphics.drawCentered(image, x, y, w, h)
-    love.graphics.draw(image, x + w / 2 - image:getWidth() / 2, y + h / 2 - image:getHeight() / 2)
+function love.graphics.drawCentered(image, x, y, width, height, scaleX, scaleY)
+    local w = image:getWidth() * (scaleX or 1) / 2
+    local h = image:getHeight() * (scaleY or 1) / 2
+    love.graphics.draw(image, x + width / 2 - w, y + height / 2 - h, 0, scaleX or 1, scaleY or 1)
 end
 
 -- Rysuje prostokąt jeśli debugowanie jest włączone
