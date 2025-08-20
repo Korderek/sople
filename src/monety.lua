@@ -31,7 +31,8 @@ end
 
 function Monety.draw()
     for _, m in ipairs(listaMonet) do
-        love.graphics.draw(monetaImg, m.x, m.y)
+        love.graphics.drawCentered(monetaImg, m.x, m.y, m.width, m.height)
+        love.graphics.rectangleDebug(m.x, m.y, m.width, m.height)
     end
 end
 

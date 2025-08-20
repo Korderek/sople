@@ -43,6 +43,8 @@ function love.load()
     szybkosci_tla = { 0.02, 0.05, 0.1 }
     czerwien = 0
 
+    debug = true -- włącz debugowanie
+
     -- Grafiki
     sklepikImg = love.graphics.newImage("gfx/sklepik.png")
     font = love.graphics.newFont("assets/fonts/font.ttf", 40)
@@ -171,7 +173,6 @@ function love.draw()
         if UI.przycisk(przyciskStart, "LECIMY") then
             Efekty.rozpocznijLadowanie(function() stanGry = stan.gra end)
         end
-        Efekty.rysujLadowanie()
     elseif stanGry == stan.gra then
         love.graphics.setColor(1, 1, 1)
         love.graphics.clear(czerwien, 0.8, 1, 1)
@@ -187,8 +188,6 @@ function love.draw()
         end
         Player.draw()
         Efekty.koniecWstrzasow()
-
-        Efekty.rysujLadowanie()
         UI.rysujSerca()
 
         love.graphics.setColor(0, 0, 0)
@@ -203,8 +202,9 @@ function love.draw()
         love.graphics.printf("Wynik: " .. wynik_koniec, font, 0, wysokosc / 2 + 40, szerokosc, "center")
         love.graphics.printf("Najlepszy wynik: " .. najlepszy_wynik, font, 0, wysokosc / 2 + 80, szerokosc, "center")
         love.graphics.printf("Monety: " .. zebraneMonety, font, 0, wysokosc / 2 + 120, szerokosc, "center")
-        Efekty.rysujLadowanie()
     end
+
+    Efekty.rysujLadowanie()
     Dialog.draw()
 end
 
@@ -220,4 +220,19 @@ function kolizja(a, b)
         a.x + a.width > b.x and
         a.y < b.y + b.height and
         a.y + a.height > b.y
+end
+
+-- Rysuje obrazek na środku prostokąta
+function love.graphics.drawCentered(image, x, y, w, h)
+    love.graphics.draw(image, x + w / 2 - image:getWidth() / 2, y + h / 2 - image:getHeight() / 2)
+end
+
+-- Rysuje prostokąt jeśli debugowanie jest włączone
+function love.graphics.rectangleDebug(x, y, width, height)
+    if debug then
+        local r, g, b, a = love.graphics.getColor()
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.rectangle("line", x, y, width, height)
+        love.graphics.setColor(r, g, b, a) -- przywracamy poprzedni kolor
+    end
 end

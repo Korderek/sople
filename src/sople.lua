@@ -47,6 +47,7 @@ end
 function Sople.draw()
     for _, sopel in ipairs(listaSopli) do
         love.graphics.draw(sopelImg, sopel.x, sopel.y)
+        love.graphics.rectangleDebug(sopel.x, sopel.y, sopel.width, sopel.height)
     end
 end
 

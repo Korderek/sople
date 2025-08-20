@@ -57,10 +57,11 @@ function Dialog.update(dt)
         Dialog.czas = Dialog.czas + dt
         Dialog.znaki = math.floor(Dialog.czas * Dialog.znaki_na_sekunde)
 
-        if Dialog.znaki >= #Dialog.aktywny.tekst then
-            -- jeśli wszystkie znaki zostały wyświetlone, czekamy na kliknięcie spacji
-            if spacja.kliknieta then
-                Dialog.nastepna_wiadomosc()
+        if spacja.kliknieta then
+            if Dialog.znaki >= utf8.len(Dialog.aktywny.tekst) then
+                Dialog.nastepna_wiadomosc() -- jeśli wszystkie znaki zostały wyświetlone, przechodzimy do następnej wiadomości
+            else
+                Dialog.czas = 999999        -- jeśli spacja została wciśnięta, wyświetlamy cały tekst
             end
         end
     end
