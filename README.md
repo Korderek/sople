@@ -14,7 +14,7 @@
 - [x] rzeczy w sklepie kosztuja monety i jest cena pokazana 
 - [x] (trudne) na czas wizyty w sklepie gra sie zatrzymuje 
 - [ ] Gdy gracz jest śpioszkiem, sople lecą 10% wolniej
-- [x] Dodaj lepsze dialogi 
-- [x] kolejne przednioty w sklepiku 
-- [x] światy do kupienia w sklepie 
+- [ ] Dodaj lepsze dialogi 
+- [ ] kolejne przednioty w sklepiku 
+- [ ] światy do kupienia w sklepie 
 - [ ] ekran światów

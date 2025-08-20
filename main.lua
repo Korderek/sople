@@ -7,6 +7,7 @@ local UI = require("src.ui")
 local Zapis = require("src.zapis")
 local Sklepik = require("src.sklepik")
 local Dialog = require("src.dialog")
+local Swiaty = require("src.swiaty")
 
 local flux = require("plugins.flux")
 
@@ -67,10 +68,11 @@ function love.load()
         y = 970,
         width = 50,
         height = 100,
-        scale = 2.0,
+        scale = 1.0,
         ox = 25,
         oy = 100,
-        skin = playerImg
+        skin = playerImg,
+        kierunek = "prawo"
     }
 
     sklepik = { x = love.math.random(0, szerokosc - 50), y = -100, width = 50, height = 50 }
@@ -95,8 +97,8 @@ function love.load()
     najlepszy_wynik = zapisek.najlepszy_wynik
     zebraneMonety = zapisek.monety
 
-    stan = { menu = {}, gra = {}, przegrana = {} }
-    stanGry = stan.menu
+    stan = { menu = {}, gra = {}, przegrana = {}, swiaty = {} }
+    stanGry = stan.swiaty
 
     love.graphics.setFont(font)
 
@@ -124,8 +126,14 @@ function love.update(dt)
         wstrzasy = wstrzasy - dt
         czerwien = math.min(1, czerwien + dt * szybkosci_tla[aktualny_poziom])
 
-        if love.keyboard.isDown("a") then gracz.x = gracz.x - predkoscGracza end
-        if love.keyboard.isDown("d") then gracz.x = gracz.x + predkoscGracza end
+        if love.keyboard.isDown("a") then
+            gracz.x = gracz.x - predkoscGracza
+            gracz.kierunek = "lewo"
+        end
+        if love.keyboard.isDown("d") then
+            gracz.x = gracz.x + predkoscGracza
+            gracz.kierunek = "prawo"
+        end
 
         gracz.x = math.max(0, math.min(szerokosc - gracz.width, gracz.x))
 
@@ -181,7 +189,8 @@ function love.draw()
         Sople.draw()
         Monety.draw()
         if not Sklepik.aktywny then
-            love.graphics.draw(sklepikImg, sklepik.x, sklepik.y)
+            love.graphics.drawCentered(sklepikImg, sklepik.x, sklepik.y, sklepik.width, sklepik.height)
+            love.graphics.rectangleDebug(sklepik.x, sklepik.y, sklepik.width, sklepik.height)
         end
         if gracz.skin == spioszekImg then
             Efekty.latarka(gracz.x + gracz.ox, gracz.y + gracz.oy)
@@ -202,7 +211,12 @@ function love.draw()
         love.graphics.printf("Wynik: " .. wynik_koniec, font, 0, wysokosc / 2 + 40, szerokosc, "center")
         love.graphics.printf("Najlepszy wynik: " .. najlepszy_wynik, font, 0, wysokosc / 2 + 80, szerokosc, "center")
         love.graphics.printf("Monety: " .. zebraneMonety, font, 0, wysokosc / 2 + 120, szerokosc, "center")
+    elseif stanGry == stan.swiaty then
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.clear(0.5, 0.8, 1, 1)
+        Swiaty.draw()
     end
+
 
     Efekty.rysujLadowanie()
     Dialog.draw()

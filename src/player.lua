@@ -6,7 +6,12 @@ function Player.draw()
         ox, oy = 15, 100
     end
     love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(gracz.skin, gracz.x - ox, gracz.y - oy, 0, gracz.scale, gracz.scale)
+    gracz.szerokosc = gracz.skin:getWidth() * gracz.scale
+    if gracz.kierunek == "lewo" then
+        love.graphics.draw(gracz.skin, gracz.x + gracz.szerokosc / 2, gracz.y - oy, 0, -gracz.scale, gracz.scale)
+    else
+        love.graphics.draw(gracz.skin, gracz.x - ox, gracz.y - oy, 0, gracz.scale, gracz.scale)
+    end
     love.graphics.rectangleDebug(gracz.x, gracz.y, gracz.width, gracz.height)
 end
 

@@ -5,7 +5,7 @@ local Sklepik = {
     ceny = {
         zycie = 10,
         predkosc = 15,
-        skin = 50
+        skin = 0
     }
 }
 
