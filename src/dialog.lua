@@ -14,6 +14,7 @@ Dialog.aktywny = nil
 
 spacja = { wcisnieta = false, kliknieta = false }
 
+-- Dodaje nowego bohatera o podanym imieniu
 function Dialog.bohater(imie, nazwa_pliku)
     -- dodaje postać z grafiką do listy bohaterów
     if not Dialog.bohaterowie[imie] then
@@ -25,6 +26,13 @@ function Dialog.bohater(imie, nazwa_pliku)
     end
 end
 
+-- Czyści kolejkę wiadomości i zamyka aktywną wiadomość
+function Dialog.wyczysc()
+    Dialog.kolejka = {}
+    Dialog.aktywny = nil
+end
+
+-- Wstawia nową wiadomość do kolejki wiadomości
 function Dialog.wiadomosc(imie, tekst)
     -- dodaje wiadomość do kolejki
     table.insert(Dialog.kolejka, {
@@ -33,6 +41,7 @@ function Dialog.wiadomosc(imie, tekst)
     })
 end
 
+-- Przechodzi do kolejnej wiadomości w kolejce
 function Dialog.nastepna_wiadomosc()
     -- pobiera następną wiadomość z kolejki
     if #Dialog.kolejka > 0 then -- # to dlugosc kolejki

@@ -19,7 +19,7 @@ function Sklepik.otworz()
         "Tanio i dobrze, rozejrzyj się i kupuj!",
         "Witaj, mam dla Ciebie kilka nowości!",
     }
-    Dialog.kolejka = {} -- zamykamy wyświetlone wiadomości
+    Dialog.wyczysc() -- zamykamy wyświetlone wiadomości
     Dialog.wiadomosc("Sprzedawca", powitanie[love.math.random(1, #powitanie)])
 end
 
