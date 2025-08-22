@@ -56,6 +56,7 @@ function love.load()
     pusteserce = love.graphics.newImage("gfx/pusteserce.png")
     playerImg = love.graphics.newImage("gfx/gracz.png")
     spioszekImg = love.graphics.newImage("gfx/spioszek.png")
+    jaskiniaImg = love.graphics.newImage("gfx/jaskinia.png")
 
     -- Portrety do dialogów
     Dialog.bohater("Janusz", "gfx/portrety/facet.png")
@@ -67,8 +68,7 @@ function love.load()
     Dialog.wiadomosc("Michał", "Nie mam, ale mogę dać 1 złoty")
     Dialog.wiadomosc("Janusz", "Daj 2 złote mistrzu")
     Dialog.wiadomosc("Janusz", "miłego dnia")
-
-    dialogi = { spioszek = false, wprowadzenie = false }
+    Dialog.wyczysc()
 
     gracz = {
         x = math.max(0, math.min(100, szerokosc - 50)),
@@ -184,8 +184,11 @@ function love.draw()
             Efekty.rozpocznijLadowanie(function() stanGry = stan.gra end)
         end
     elseif stanGry == stan.gra then
-        love.graphics.setColor(1, 1, 1)
-        love.graphics.clear(czerwien, 0.8, 1, 1)
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.drawStretched(jaskiniaImg, 0, 0, szerokosc, wysokosc)
+        love.graphics.setColor(czerwien, 0.8, 1, 0.3)
+        love.graphics.rectangle("fill", 0, 0, szerokosc, wysokosc)
+        love.graphics.setColor(1, 1, 1, 1)
 
         Efekty.wstrzasyZMoca(10)
         Sople.draw()
@@ -258,4 +261,11 @@ function love.graphics.rectangleDebug(x, y, width, height)
         love.graphics.rectangle("line", x, y, width, height)
         love.graphics.setColor(r, g, b, a) -- przywracamy poprzedni kolor
     end
+end
+
+-- Rysuje grafikę tak, aby wypełniła podany prostokąt
+function love.graphics.drawStretched(drawable, x, y, width, height)
+    local sx = width / drawable:getWidth()
+    local sy = height / drawable:getHeight()
+    love.graphics.draw(drawable, x, y, 0, sx, sy)
 end
