@@ -3,11 +3,45 @@ local Dialog = require("src.dialog")
 
 local Sklepik = {
     aktywny = false,
-    ceny = {
-        zycie = 10,
-        predkosc = 15,
-        skin = 0
-    }
+}
+
+Sklepik.oferta = {
+    zycie = {
+        nazwa = "Życie+",
+        cena = 10,
+        dostepna = function(towar)
+            return zebraneMonety >= towar.cena and zycia < 3
+        end,
+        akcja = function(towar)
+            zebraneMonety = zebraneMonety - towar.cena
+            zycia = zycia + 1
+            towar.cena = towar.cena + 5
+        end,
+    },
+    predkosc = {
+        nazwa = "Szybkość+",
+        cena = 10,
+        dostepna = function(towar)
+            return zebraneMonety >= towar.cena
+        end,
+        akcja = function(towar)
+            zebraneMonety = zebraneMonety - towar.cena
+            predkoscGracza = predkoscGracza + 1
+            towar.cena = towar.cena + 5
+        end,
+    },
+    skin = {
+        nazwa = "Skin",
+        cena = 0,
+        dostepna = function(towar)
+            return zebraneMonety >= towar.cena
+        end,
+        akcja = function(towar)
+            zebraneMonety = zebraneMonety - towar.cena
+            gracz.skin = spioszekImg -- zmiana skina
+            towar.cena = towar.cena + 20
+        end,
+    },
 }
 
 function Sklepik.otworz()
@@ -25,6 +59,7 @@ end
 
 function Sklepik.zamknij()
     Sklepik.aktywny = false
+    Dialog.wyczysc()
 end
 
 function Sklepik.draw()
@@ -61,49 +96,20 @@ function Sklepik.draw()
     local startX, startY = boxX + 40, boxY + 80
     local slotSize = 150
     local spacing = 20
+    local kafelek = { x = startX, y = startY, width = slotSize, height = slotSize }
 
-    -- Życie +1
-    if UI.przycisk({
-            x = startX,
-            y = startY,
-            width = slotSize,
-            height = 50
-        }, "Życie +" .. Sklepik.ceny.zycie) then
-        if zycia < 3 and zebraneMonety >= Sklepik.ceny.zycie then
-            zebraneMonety = zebraneMonety - Sklepik.ceny.zycie
-            zycia = zycia + 1
-            Sklepik.ceny.zycie = Sklepik.ceny.zycie + 5
-        elseif zycia >= 3 then
-            zebraneMonety = zebraneMonety + Sklepik.ceny.zycie
-        end
-    end
+    local aktualnaOferta = {
+        Sklepik.oferta.zycie,
+        Sklepik.oferta.skin,
+        Sklepik.oferta.predkosc,
+    }
 
-    -- Szybkość +
-    if UI.przycisk({
-            x = startX + slotSize + spacing,
-            y = startY,
-            width = slotSize,
-            height = 50
-        }, "Szybkość +" .. Sklepik.ceny.predkosc) then
-        if zebraneMonety >= Sklepik.ceny.predkosc then
-            zebraneMonety = zebraneMonety - Sklepik.ceny.predkosc
-            predkoscGracza = predkoscGracza + 1
-            Sklepik.ceny.predkosc = Sklepik.ceny.predkosc + 5
+    for _, oferta in ipairs(aktualnaOferta) do
+        local tekst = oferta.nazwa .. " " .. oferta.cena
+        if UI.przycisk_sklepik(kafelek, tekst, not oferta:dostepna()) and oferta:dostepna() then
+            oferta:akcja()
         end
-    end
-
-    -- Lepszy skin
-    if UI.przycisk({
-            x = startX + (slotSize + spacing) * 2,
-            y = startY,
-            width = slotSize,
-            height = 50
-        }, "Skin " .. Sklepik.ceny.skin) then
-        if zebraneMonety >= Sklepik.ceny.skin then
-            zebraneMonety = zebraneMonety - Sklepik.ceny.skin
-            gracz.skin = spioszekImg -- zmiana skina
-            Sklepik.ceny.skin = Sklepik.ceny.skin + 20
-        end
+        kafelek.x = kafelek.x + slotSize + spacing
     end
 end
 

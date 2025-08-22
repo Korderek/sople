@@ -46,9 +46,12 @@ function love.load()
 
     debug = true -- włącz debugowanie
 
+    -- Fonty
+    font = love.graphics.newFont("assets/fonts/font.ttf", 40)
+    font_small = love.graphics.newFont("assets/fonts/font.ttf", 28)
+
     -- Grafiki
     sklepikImg = love.graphics.newImage("gfx/sklepik.png")
-    font = love.graphics.newFont("assets/fonts/font.ttf", 40)
     serce = love.graphics.newImage("gfx/serce.png")
     pusteserce = love.graphics.newImage("gfx/pusteserce.png")
     playerImg = love.graphics.newImage("gfx/gracz.png")
@@ -192,7 +195,7 @@ function love.draw()
             love.graphics.rectangleDebug(sklepik.x, sklepik.y, sklepik.width, sklepik.height)
         end
         if gracz.skin == spioszekImg then
-            Efekty.latarka(gracz.x + gracz.ox, gracz.y + gracz.oy)
+            Efekty.latarka(gracz.x + gracz.width / 2, gracz.y + gracz.height / 2)
         end
         Player.draw()
         Efekty.koniecWstrzasow()
@@ -240,6 +243,11 @@ function love.graphics.drawCentered(image, x, y, width, height, scaleX, scaleY)
     local w = image:getWidth() * (scaleX or 1) / 2
     local h = image:getHeight() * (scaleY or 1) / 2
     love.graphics.draw(image, x + width / 2 - w, y + height / 2 - h, 0, scaleX or 1, scaleY or 1)
+end
+
+-- Wyświetla tekst na środku prostokąta
+function love.graphics.printCentered(text, font, x, y, width, height)
+    love.graphics.printf(text, font, x, y + height / 2 - font:getHeight() / 2, width, "center")
 end
 
 -- Rysuje prostokąt jeśli debugowanie jest włączone
