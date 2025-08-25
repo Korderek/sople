@@ -243,9 +243,17 @@ end
 
 -- Rysuje obrazek na środku prostokąta
 function love.graphics.drawCentered(image, x, y, width, height, scaleX, scaleY)
-    local w = image:getWidth() * (scaleX or 1) / 2
-    local h = image:getHeight() * (scaleY or 1) / 2
-    love.graphics.draw(image, x + width / 2 - w, y + height / 2 - h, 0, scaleX or 1, scaleY or 1)
+    local ox = image:getWidth() / 2
+    local oy = image:getHeight() / 2
+    love.graphics.draw(image, x + width / 2, y + height / 2, 0, scaleX or 1, scaleY or 1, ox, oy)
+end
+
+-- Rysuje quad na środku prostokąta
+function love.graphics.drawQuadCentered(image, quad, x, y, width, height, scaleX, scaleY)
+    local _, _, quad_w, quad_h = quad:getViewport()
+    local ox = quad_w / 2
+    local oy = quad_h / 2
+    love.graphics.draw(image, quad, x + width / 2, y + height / 2, 0, scaleX or 1, scaleY or 1, ox, oy)
 end
 
 -- Wyświetla tekst na środku prostokąta
