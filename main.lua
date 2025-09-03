@@ -77,7 +77,10 @@ function love.load()
         height = 80,
         scale = 1.0,
         skin = playerImg,
-        kierunek = "prawo"
+        kierunek = "prawo",
+        przyspieszenie = 2.18,
+        predkosc = 0,
+        idzie = true
     }
 
     sklepik = { x = love.math.random(0, szerokosc - 50), y = -100, width = 100, height = 100 }
@@ -88,8 +91,12 @@ function love.load()
     local ilosc_monet = 3
     Monety.spawn(ilosc_monet)
 
-    predkoscGracza = 3
-    zycia = 1
+    krok = 0
+    radosny = 0
+    oberwal = 0
+    wslizg = 0
+    tarcie = 0.76
+    zycia = 687321678279898712
     niesmiertelny = 0
     wstrzasy = 0
     czas = 0
@@ -128,17 +135,40 @@ function love.update(dt)
 
     if stanGry == stan.gra then
         niesmiertelny = niesmiertelny - dt
+        radosny = radosny - dt
+        oberwal = oberwal - dt
+        wslizg = wslizg - dt
         wstrzasy = wstrzasy - dt
         czerwien = math.min(1, czerwien + dt * szybkosci_tla[aktualny_poziom])
-
-        if love.keyboard.isDown("a") then
-            gracz.x = gracz.x - predkoscGracza
-            gracz.kierunek = "lewo"
+        krok = krok - dt
+        if krok < 0 then
+            gracz.idzie = not gracz.idzie
+            krok = 0.3
         end
-        if love.keyboard.isDown("d") then
-            gracz.x = gracz.x + predkoscGracza
-            gracz.kierunek = "prawo"
+        local przyspieszenie = 0
+        if love.keyboard.isDown("s") then
+            wslizg = 0.3
         end
+        if wslizg < 0 then
+            if love.keyboard.isDown("a") then
+                gracz.kierunek = "lewo"
+                przyspieszenie = -gracz.przyspieszenie
+            end
+            if love.keyboard.isDown("d") then
+                gracz.kierunek = "prawo"
+                przyspieszenie = gracz.przyspieszenie
+            end
+        end
+        if wslizg > 0 then
+            if gracz.kierunek == "lewo" then
+                przyspieszenie = -gracz.przyspieszenie
+            else
+                przyspieszenie = gracz.przyspieszenie
+            end
+            przyspieszenie = przyspieszenie * 2
+        end
+        gracz.predkosc = gracz.predkosc * tarcie + przyspieszenie
+        gracz.x = gracz.x + gracz.predkosc
 
         gracz.x = math.max(0, math.min(szerokosc - gracz.width, gracz.x))
 

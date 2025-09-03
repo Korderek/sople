@@ -23,6 +23,7 @@ function Monety.update(dt)
         end
         if kolizja(gracz, m) then
             -- Jeśli gracz zbierze monetę, zwiększamy licznik i generujemy nową
+            radosny = 0.3
             zebraneMonety = zebraneMonety + 1
             listaMonet[i] = Monety.losowaMoneta()
         end

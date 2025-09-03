@@ -27,11 +27,22 @@ function Player.draw()
     local animacja = animacje.standard
     if gracz.skin == spioszekImg then
         tekstura = tekstura_spioszek
+
         animacja = animacje.spioszek
     end
 
     love.graphics.setColor(1, 1, 1)
-    love.graphics.drawQuadCentered(tekstura, animacja.stoi, gracz.x, gracz.y, gracz.width, gracz.height, scale_x, scale_y)
+    local poza = animacja.stoi
+    if wslizg > 0 then
+    poza = animacja.wslizg
+    elseif oberwal > 0 then
+        poza = animacja.zraniony
+    elseif radosny > 0 then
+        poza = animacja.radosny
+    elseif gracz.idzie == true and math.abs(gracz.predkosc) > 0.1 then
+        poza = animacja.idzie
+    end
+    love.graphics.drawQuadCentered(tekstura, poza, gracz.x, gracz.y, gracz.width, gracz.height, scale_x, scale_y)
     love.graphics.rectangleDebug(gracz.x, gracz.y, gracz.width, gracz.height)
 end
 

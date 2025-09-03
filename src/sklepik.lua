@@ -26,7 +26,7 @@ Sklepik.oferta = {
         end,
         akcja = function(towar)
             zebraneMonety = zebraneMonety - towar.cena
-            predkoscGracza = predkoscGracza + 1
+            gracz.przyspieszenie = gracz.przyspieszenie + 1
             towar.cena = towar.cena + 5
         end,
     },

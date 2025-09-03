@@ -39,6 +39,7 @@ function Sople.update(dt)
             zycia = zycia - 1
             niesmiertelny = 2
             wstrzasy = 0.3
+            oberwal = 1
         end
     end
 end
