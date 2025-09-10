@@ -1,6 +1,7 @@
 local Swiaty = {}
 local UI = require("src.ui")
 local Efekty = require("src.efekty")
+local Pustynia = require("planety.pustynia")
 local klodka = love.graphics.newImage("gfx/klodka.png")
 
 local planety = {
@@ -21,7 +22,8 @@ local planety = {
         nazwa = "Bezkresna pustynia",
         zablokowana = false,
         akcja = function()
-            stanGry = stan.gra
+            stanGry = stan.pustynia
+            Pustynia.load()
         end
     },
     wulkan = {

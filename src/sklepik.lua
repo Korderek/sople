@@ -8,7 +8,7 @@ local Sklepik = {
 
 Sklepik.oferty = {
     {
-        nazwa = "Życie+",
+        nazwa = "Życie",
         cena = 10,
         dostepna = function(self)
             return zebraneMonety >= self.cena and zycia < maxZycia
@@ -33,7 +33,7 @@ Sklepik.oferty = {
         end
     },
     {
-        nazwa = "Szybkość+",
+        nazwa = "Szybkość",
         cena = 15,
         dostepna = function(self)
             return zebraneMonety >= self.cena
@@ -73,7 +73,7 @@ Sklepik.oferty = {
 -- Losowanie 3 unikalnych ofert
 function Sklepik.losujOferte()
     Sklepik.aktualnaOferta = {}
-    local pool = { table.unpack(Sklepik.oferty) }
+    local pool = { unpack(Sklepik.oferty) }
     for i = 1, 3 do
         if #pool == 0 then break end
         local index = love.math.random(1, #pool)

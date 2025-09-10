@@ -8,6 +8,7 @@ local Zapis = require("src.zapis")
 local Sklepik = require("src.sklepik")
 local Dialog = require("src.dialog")
 local Swiaty = require("src.swiaty")
+local Pustynia = require("planety.pustynia")
 
 local flux = require("plugins.flux")
 
@@ -81,7 +82,7 @@ function love.load()
         przyspieszenie = 2.18,
         predkosc = 0,
         idzie = true
-    }
+        }
 
     sklepik = { x = love.math.random(0, szerokosc - 50), y = -100, width = 100, height = 100 }
 
@@ -96,7 +97,9 @@ function love.load()
     oberwal = 0
     wslizg = 0
     tarcie = 0.74
-    zycia = 687321678279898712
+    zycia = 3
+    maxZycia = zycia
+    wslizgAktywny = false
     niesmiertelny = 0
     wstrzasy = 0
     czas = 0
@@ -109,7 +112,7 @@ function love.load()
     najlepszy_wynik = zapisek.najlepszy_wynik
     zebraneMonety = zapisek.monety
 
-    stan = { menu = {}, gra = {}, przegrana = {}, swiaty = {} }
+    stan = { menu = {}, gra = {}, przegrana = {}, swiaty = {}, pustynia = {} }
     stanGry = stan.swiaty
 
     love.graphics.setFont(font)
@@ -146,7 +149,8 @@ function love.update(dt)
             krok = krok + 0.3
         end
         local przyspieszenie = 0
-        if wslizg < -1 and love.keyboard.isDown("s") then
+        if wslizg < -1 and love.keyboard.isDown("s") and wslizgAktywny then
+            --rozpoczęcie wślizgu
             wslizg = 0.4
         end
         if wslizg < 0 then
@@ -207,6 +211,9 @@ function love.update(dt)
             Efekty.rozpocznijLadowanie(function() stanGry = stan.przegrana end)
         end
     end
+    if stanGry == stan.pustynia then
+        Pustynia.update(dt)
+    end
 end
 
 ---------------------
@@ -258,6 +265,9 @@ function love.draw()
         love.graphics.setColor(1, 1, 1)
         love.graphics.clear(0.5, 0.8, 1, 1)
         Swiaty.draw()
+    elseif stanGry == stan.pustynia then
+        Pustynia.draw()
+        love.graphics.setColor(1, 1, 1)
     end
 
 
