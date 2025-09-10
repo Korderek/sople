@@ -71,7 +71,7 @@ function UI.przycisk_sklepik(wymiary, tekst, zablokowany)
     return not zablokowany and mysz_na_przycisku and lewy_przycisk.klikniety
 end
 
-function UI.przycisk_swiat(x, y, grafika, nazwa)
+function UI.przycisk_swiat(x, y, grafika, nazwa, zablokowany)
     local r, g, b, a = love.graphics.getColor() -- zapamiętujemy aktualny kolor
 
     local wymiary = {
@@ -94,16 +94,17 @@ function UI.przycisk_swiat(x, y, grafika, nazwa)
 
     -- rysujemy grafikę
     Shader.obramowanie(grubosc_obramowania, kolor_obramowania) -- rysuj grafikę z obwódką
+    if zablokowany then Shader.szarosc() end
     love.graphics.drawCentered(grafika, wymiary.x, wymiary.y, wymiary.width, wymiary.height)
-    Shader.koniec()                                            -- wyłącz rysowanie obwódki
+    Shader.koniec() -- wyłącz rysowanie obwódki
     -- wyświetlamy nazwę pod grafiką
     love.graphics.setColor(kolor_tekstu)
-    love.graphics.printf(nazwa, font, wymiary.x, wymiary.y + wymiary.height + font:getHeight() / 2, wymiary.width,
+    love.graphics.printf(nazwa, font, wymiary.x, wymiary.y + wymiary.height - 20, wymiary.width,
         "center")
 
     love.graphics.setColor(r, g, b, a) -- przywracamy poprzedni kolor
 
-    return mysz_na_przycisku and lewy_przycisk.klikniety
+    return not zablokowany and mysz_na_przycisku and lewy_przycisk.klikniety
 end
 
 -- Rysuje serca w prawym górnym rogu ekranu
