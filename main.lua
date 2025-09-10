@@ -95,7 +95,7 @@ function love.load()
     radosny = 0
     oberwal = 0
     wslizg = 0
-    tarcie = 0.76
+    tarcie = 0.74
     zycia = 687321678279898712
     niesmiertelny = 0
     wstrzasy = 0
@@ -143,11 +143,11 @@ function love.update(dt)
         krok = krok - dt
         if krok < 0 then
             gracz.idzie = not gracz.idzie
-            krok = 0.3
+            krok = krok + 0.3
         end
         local przyspieszenie = 0
-        if love.keyboard.isDown("s") then
-            wslizg = 0.3
+        if wslizg < -1 and love.keyboard.isDown("s") then
+            wslizg = 0.4
         end
         if wslizg < 0 then
             if love.keyboard.isDown("a") then
@@ -165,7 +165,15 @@ function love.update(dt)
             else
                 przyspieszenie = gracz.przyspieszenie
             end
-            przyspieszenie = przyspieszenie * 2
+            if wslizg < 0.2 then
+                przyspieszenie = przyspieszenie * 0.8
+            else
+                przyspieszenie = przyspieszenie * 2.5
+            end
+        end
+        if przyspieszenie == 0 then
+            gracz.idzie = false
+            krok = 0
         end
         gracz.predkosc = gracz.predkosc * tarcie + przyspieszenie
         gracz.x = gracz.x + gracz.predkosc
