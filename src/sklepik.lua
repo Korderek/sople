@@ -3,57 +3,95 @@ local Dialog = require("src.dialog")
 
 local Sklepik = {
     aktywny = false,
+    aktualnaOferta = {}
 }
 
-Sklepik.oferta = {
-    zycie = {
+Sklepik.oferty = {
+    {
         nazwa = "Życie+",
         cena = 10,
-        dostepna = function(towar)
-            return zebraneMonety >= towar.cena and zycia < 3
+        dostepna = function(self)
+            return zebraneMonety >= self.cena and zycia < maxZycia
         end,
-        akcja = function(towar)
-            zebraneMonety = zebraneMonety - towar.cena
+        akcja = function(self)
+            zebraneMonety = zebraneMonety - self.cena
             zycia = zycia + 1
-            towar.cena = towar.cena + 5
-        end,
+            self.cena = self.cena + 5
+        end
     },
-    predkosc = {
+    {
+        nazwa = "Puste Serce",
+        cena = 30,
+        dostepna = function(self)
+            return zebraneMonety >= self.cena
+        end,
+        akcja = function(self)
+            zebraneMonety = zebraneMonety - self.cena
+            maxZycia = maxZycia + 1
+            zycia = zycia + 1
+            self.cena = self.cena + 20
+        end
+    },
+    {
         nazwa = "Szybkość+",
-        cena = 10,
-        dostepna = function(towar)
-            return zebraneMonety >= towar.cena
+        cena = 15,
+        dostepna = function(self)
+            return zebraneMonety >= self.cena
         end,
-        akcja = function(towar)
-            zebraneMonety = zebraneMonety - towar.cena
+        akcja = function(self)
+            zebraneMonety = zebraneMonety - self.cena
             gracz.przyspieszenie = gracz.przyspieszenie + 1
-            towar.cena = towar.cena + 5
-        end,
+            self.cena = self.cena + 5
+        end
     },
-    skin = {
+    {
         nazwa = "Skin",
-        cena = 0,
-        dostepna = function(towar)
-            return zebraneMonety >= towar.cena
+        cena = 50,
+        dostepna = function(self)
+            return zebraneMonety >= self.cena
         end,
-        akcja = function(towar)
-            zebraneMonety = zebraneMonety - towar.cena
-            gracz.skin = spioszekImg -- zmiana skina
-            towar.cena = towar.cena + 20
-        end,
+        akcja = function(self)
+            zebraneMonety = zebraneMonety - self.cena
+            gracz.skin = spioszekImg
+            self.cena = self.cena + 20
+        end
     },
+    {
+        nazwa = "Wślizg",
+        cena = 40,
+        dostepna = function(self)
+            return zebraneMonety >= self.cena and not wslizgAktywny
+        end,
+        akcja = function(self)
+            zebraneMonety = zebraneMonety - self.cena
+            wslizgAktywny = true
+            self.cena = self.cena + 30
+        end
+    }
 }
+
+-- Losowanie 3 unikalnych ofert
+function Sklepik.losujOferte()
+    Sklepik.aktualnaOferta = {}
+    local pool = { table.unpack(Sklepik.oferty) }
+    for i = 1, 3 do
+        if #pool == 0 then break end
+        local index = love.math.random(1, #pool)
+        table.insert(Sklepik.aktualnaOferta, pool[index])
+        table.remove(pool, index)
+    end
+end
 
 function Sklepik.otworz()
     Sklepik.aktywny = true
-
+    Sklepik.losujOferte()
     local powitanie = {
         "Witaj w sklepiku!",
         "Czego Ci potrzeba?",
-        "Tanio i dobrze, rozejrzyj się i kupuj!",
-        "Witaj, mam dla Ciebie kilka nowości!",
+        "Tanio i dobrze, rozejrzyj się!",
+        "Witaj, mam dla Ciebie kilka nowości!"
     }
-    Dialog.wyczysc() -- zamykamy wyświetlone wiadomości
+    Dialog.wyczysc()
     Dialog.wiadomosc("Sprzedawca", powitanie[love.math.random(1, #powitanie)])
 end
 
@@ -65,48 +103,36 @@ end
 function Sklepik.draw()
     if not Sklepik.aktywny then return end
 
-    -- półprzezroczyste tło na cały ekran
+    -- Tło
     love.graphics.setColor(0, 0, 0, 0.6)
     love.graphics.rectangle("fill", 0, 0, szerokosc, wysokosc)
 
-    -- ramka sklepu (środek ekranu)
+    -- Okno
     local boxW, boxH = 600, 400
     local boxX, boxY = (szerokosc - boxW) / 2, (wysokosc - boxH) / 2
     love.graphics.setColor(0.2, 0.2, 0.2, 0.9)
     love.graphics.rectangle("fill", boxX, boxY, boxW, boxH)
     love.graphics.setColor(1, 1, 1)
-    love.graphics.setLineWidth(3)
     love.graphics.rectangle("line", boxX, boxY, boxW, boxH)
 
-    -- tytuł
-    love.graphics.setFont(font)
     love.graphics.printf("Sklepik", boxX, boxY + 10, boxW, "center")
 
-    -- przycisk zamknięcia (prawy górny róg sklepu)
+    -- Zamknięcie
     if UI.przycisk({
-            x = boxX + boxW - 40,
-            y = boxY + 10,
-            width = 30,
-            height = 30
-        }, "X") then
+        x = boxX + boxW - 40, y = boxY + 10, width = 30, height = 30
+    }, "X") then
         Sklepik.zamknij()
     end
 
-    -- przyciski ofert (w siatce jak w Minecraft)
+    -- Sloty
     local startX, startY = boxX + 40, boxY + 80
     local slotSize = 150
     local spacing = 20
     local kafelek = { x = startX, y = startY, width = slotSize, height = slotSize }
 
-    local aktualnaOferta = {
-        Sklepik.oferta.zycie,
-        Sklepik.oferta.skin,
-        Sklepik.oferta.predkosc,
-    }
-
-    for _, oferta in ipairs(aktualnaOferta) do
-        local tekst = oferta.nazwa .. " " .. oferta.cena
-        if UI.przycisk_sklepik(kafelek, tekst, not oferta:dostepna()) and oferta:dostepna() then
+    for _, oferta in ipairs(Sklepik.aktualnaOferta) do
+        local tekst = oferta.nazwa .. " (" .. oferta.cena .. ")"
+        if UI.przycisk(kafelek, tekst) and oferta:dostepna() then
             oferta:akcja()
         end
         kafelek.x = kafelek.x + slotSize + spacing
