@@ -23,9 +23,9 @@
 - [ ] Wyświetl grafiki planet na ekranie wyboru świata:
   - [ ] Planety na ekranie światów - Dzika knieja - grafika z lasem
   - [ ] Planety na ekranie światów - Pustynia zatracenia - grafika z pustynią
-- [ ] Zmieniaj animację gracza w zależności od sytuacji:
-  - [ ] Gdy niesmiertelny > 0, wyświetl grafikę 'zraniony'
-  - [ ] Gdy zbierze monetę, wyświetl przez 0.3s grafikę 'radosny'
-  - [ ] Gdy stoi, wyświetl grafikę 'stoi'
-  - [ ] Gdy idzie, wyświetl grafikę 'idzie'
+- [x] Zmieniaj animację gracza w zależności od sytuacji:
+  - [x] Gdy niesmiertelny > 0, wyświetl grafikę 'zraniony'
+  - [x] Gdy zbierze monetę, wyświetl przez 0.3s grafikę 'radosny'
+  - [x] Gdy stoi, wyświetl grafikę 'stoi'
+  - [x] Gdy idzie, wyświetl grafikę 'idzie'
 
