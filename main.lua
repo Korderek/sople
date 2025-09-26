@@ -113,7 +113,7 @@ function love.load()
     zebraneMonety = zapisek.monety
 
     stan = { menu = {}, gra = {}, przegrana = {}, swiaty = {}, pustynia = {} }
-    stanGry = stan.swiaty
+    stanGry = stan.menu
 
     love.graphics.setFont(font)
 
@@ -226,7 +226,7 @@ function love.draw()
             aktualny_poziom = aktualny_poziom % #poziomy + 1
         end
         if UI.przycisk(przyciskStart, "LECIMY") then
-            Efekty.rozpocznijLadowanie(function() stanGry = stan.gra end)
+            Efekty.rozpocznijLadowanie(function() stanGry = stan.swiaty end)
         end
     elseif stanGry == stan.gra then
         love.graphics.setColor(1, 1, 1, 1)
