@@ -27,6 +27,8 @@
   - [x] Gdy zbierze monetę, wyświetl przez 0.3s grafikę 'radosny'
   - [x] Gdy stoi, wyświetl grafikę 'stoi'
   - [x] Gdy idzie, wyświetl grafikę 'idzie'
-
+  - [ ] Dodanie kolizji do kaktusa
+  - [ ] Na pustyni gracz ma mieć animację biegania
+  - [ ] Wyświetlanie żyć na pustyni
 
 

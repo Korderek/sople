@@ -1,7 +1,7 @@
 local Pustynia = {}
 local Player = require("src.player")
 local listakaktusow = {}
-local ziemia = {}
+local listaziemi = {}
 
 local kaktusImg = love.graphics.newImage("gfx/kaktus.png")
 local ziemiaImg = love.graphics.newImage("gfx/ziemia.png")
@@ -16,13 +16,15 @@ Pustynia.load = function()
     gracz.y = 800
     gracz.x = 300
 
-    ziemia = {
-        x = szerokosc + 100,
-        y = 800,
-    }
-end
 
-Pustynia.update = function(dt)
+    for i = 0, 2 do
+        table.insert(listaziemi, {
+            x = i * ziemiaImg:getWidth(),
+            y = 800,
+        })
+    end
+end
+function Pustynia.update(dt)
     --gracz.y = gracz.y + 5
     kaktus.x = kaktus.x - 10
     if kaktus.x < -100 then
@@ -30,10 +32,13 @@ Pustynia.update = function(dt)
         table.insert(listakaktusow,
             { x = kaktus.x, y = kaktus.y, width = kaktusImg:getWidth(), height = kaktusImg:getHeight() })
     end
-    ziemia.x = ziemia.x - 10
-    if ziemia.x < -200 then
-        ziemia.x = szerokosc + love.math.random(200, 800)
+    for _, z in ipairs(listaziemi) do
+        z.x = z.x - 10
+        if z.x < -ziemiaImg:getWidth() then
+            z.x = szerokosc
+        end
     end
+
     local przyspieszenie = 0
     if love.keyboard.isDown("w") and gracz.y == 800 then
         przyspieszenie = -37
@@ -50,7 +55,9 @@ end
 Pustynia.draw = function()
     love.graphics.drawStretched(pustyniaImg, 0, 0, szerokosc, wysokosc)
     love.graphics.setBackgroundColor(0.9, 0.8, 0.5)
-    love.graphics.drawStretched(ziemiaImg, ziemia.x, ziemia.y, 6182 * szerokosc, ziemiaImg:getHeight())
+    for _, z in ipairs(listaziemi) do
+        love.graphics.drawStretched(ziemiaImg, z.x, z.y, ziemiaImg:getWidth(), ziemiaImg:getHeight())
+    end
     love.graphics.drawCentered(kaktusImg, kaktus.x, kaktus.y, 1, 1)
     Player.draw()
 end
