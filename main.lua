@@ -82,7 +82,7 @@ function love.load()
         przyspieszenie = 2.18,
         predkosc = 0,
         idzie = true
-        }
+    }
 
     sklepik = { x = love.math.random(0, szerokosc - 50), y = -100, width = 100, height = 100 }
 
