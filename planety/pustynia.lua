@@ -1,7 +1,9 @@
 local Pustynia = {}
 local Player = require("src.player")
 local listakaktusow = {}
+
 local kaktusImg = love.graphics.newImage("gfx/gracz.png")
+
 Pustynia.load = function()
     kaktus = {
         x = szerokosc + 100,
@@ -34,8 +36,8 @@ Pustynia.update = function(dt)
 end
 
 Pustynia.draw = function()
+    love.graphics.setBackgroundColor(0.9, 0.8, 0.5)
     love.graphics.drawCentered(kaktusImg, kaktus.x, kaktus.y, 1, 1)
     Player.draw()
-    love.graphics.setBackgroundColor(0.9, 0.8, 0.5)
 end
 return Pustynia
