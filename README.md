@@ -18,14 +18,15 @@
 - [ ] Dodaj nowe przedmioty w sklepiku:
   - [ ] Sklepik - nowy przedmiot - puste serce - zwiększa limit serc o 1
   - [ ] Sklepik - nowy przedmiot - wślizg - odblokowuje umiejętność wślizgu - zwiększenie prędkości na 0.3s do 10 po kliknięciu "s" na klawiaturze
-- [ ] Po otwarciu sklepu wylosuj 3 towary, które będą możliwe do kupienia
-- [ ] Wyświetl grafiki planet na ekranie wyboru świata:
-  - [ ] Planety na ekranie światów - Dzika knieja - grafika z lasem
-  - [ ] Planety na ekranie światów - Pustynia zatracenia - grafika z pustynią
+- [x] Po otwarciu sklepu wylosuj 3 towary, które będą możliwe do kupienia
+- [x] Wyświetl grafiki planet na ekranie wyboru świata:
+  - [x] Planety na ekranie światów - Dzika knieja - grafika z lasem
+  - [x] Planety na ekranie światów - Pustynia zatracenia - grafika z pustynią
 - [x] Zmieniaj animację gracza w zależności od sytuacji:
   - [x] Gdy niesmiertelny > 0, wyświetl grafikę 'zraniony'
   - [x] Gdy zbierze monetę, wyświetl przez 0.3s grafikę 'radosny'
   - [x] Gdy stoi, wyświetl grafikę 'stoi'
   - [x] Gdy idzie, wyświetl grafikę 'idzie'
+
 
 
