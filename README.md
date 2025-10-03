@@ -1,6 +1,5 @@
 # sople
 
-### Zadania
 
 ### Zadania
 
@@ -28,4 +27,5 @@
   - [x] Gdy zbierze monetę, wyświetl przez 0.3s grafikę 'radosny'
   - [x] Gdy stoi, wyświetl grafikę 'stoi'
   - [x] Gdy idzie, wyświetl grafikę 'idzie'
+
 
