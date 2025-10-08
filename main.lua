@@ -130,6 +130,11 @@ function love.update(dt)
     Dialog.update(dt)
     UI.update()
     flux.update(dt)
+    niesmiertelny = niesmiertelny - dt
+    radosny = radosny - dt
+    oberwal = oberwal - dt
+    wslizg = wslizg - dt
+    wstrzasy = wstrzasy - dt
 
     -- Jeśli sklepik otwarty, nie aktualizujemy gry
     if Sklepik.aktywny then
@@ -137,11 +142,6 @@ function love.update(dt)
     end
 
     if stanGry == stan.gra then
-        niesmiertelny = niesmiertelny - dt
-        radosny = radosny - dt
-        oberwal = oberwal - dt
-        wslizg = wslizg - dt
-        wstrzasy = wstrzasy - dt
         czerwien = math.min(1, czerwien + dt * szybkosci_tla[aktualny_poziom])
         krok = krok - dt
         if krok < 0 then

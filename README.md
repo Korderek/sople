@@ -17,7 +17,7 @@
 - [ ] Śpioszek - Gdy gracz jest śpioszkiem, sople lecą 10% wolniej
 - [ ] Dodaj nowe przedmioty w sklepiku:
   - [ ] Sklepik - nowy przedmiot - puste serce - zwiększa limit serc o 1
-  - [ ] Sklepik - nowy przedmiot - wślizg - odblokowuje umiejętność wślizgu - zwiększenie prędkości na 0.3s do 10 po kliknięciu "s" na klawiaturze
+  - [x] Sklepik - nowy przedmiot - wślizg - odblokowuje umiejętność wślizgu - zwiększenie prędkości na 0.3s do 10 po kliknięciu "s" na klawiaturze
 - [x] Po otwarciu sklepu wylosuj 3 towary, które będą możliwe do kupienia
 - [x] Wyświetl grafiki planet na ekranie wyboru świata:
   - [x] Planety na ekranie światów - Dzika knieja - grafika z lasem
@@ -27,8 +27,11 @@
   - [x] Gdy zbierze monetę, wyświetl przez 0.3s grafikę 'radosny'
   - [x] Gdy stoi, wyświetl grafikę 'stoi'
   - [x] Gdy idzie, wyświetl grafikę 'idzie'
-  - [ ] Dodanie kolizji do kaktusa
-  - [ ] Na pustyni gracz ma mieć animację biegania
-  - [ ] Wyświetlanie żyć na pustyni
+  - [x] Dodanie kolizji do kaktusa
+  - [ ] Na pustyni gracz ma mieć animację biegania :joy: 🏃🏃🏃
+  - [x] Wyświetlanie żyć na pustyni
+  - [ ] Game over na pustyni
+  - [ ] Zapis osobny punktów co 1 sekundę
+  - [ ] Gdy osiągnięto najlepszy wynik przywałaj grób
 
 
