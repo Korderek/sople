@@ -1,4 +1,5 @@
 local Pustynia = {}
+local UI = require("src.ui")
 local Player = require("src.player")
 local listakaktusow = {}
 local listaziemi = {}
@@ -60,5 +61,6 @@ Pustynia.draw = function()
     end
     love.graphics.drawCentered(kaktusImg, kaktus.x, kaktus.y, 1, 1)
     Player.draw()
+    UI.rysujSerca()
 end
 return Pustynia

@@ -29,6 +29,6 @@
   - [x] Gdy idzie, wyświetl grafikę 'idzie'
   - [ ] Dodanie kolizji do kaktusa
   - [ ] Na pustyni gracz ma mieć animację biegania
-  - [ ] Wyświetlanie żyć na pustyni
+  - [x] Wyświetlanie żyć na pustyni
 
 
