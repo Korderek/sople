@@ -87,8 +87,12 @@ Pustynia.draw = function()
         love.graphics.drawCentered(przeszkoda.tekstura, przeszkoda.x, przeszkoda.y, 1, 1)
     end
     Player.draw()
+<<<<<<< HEAD
 
     UI.rysujSerca()
     love.graphics.print(niesmiertelny, 10, 10)
+=======
+    UI.rysujSerca()
+>>>>>>> 45e1746c05bb5696bdaec94a5ae275e115dcf4d9
 end
 return Pustynia
