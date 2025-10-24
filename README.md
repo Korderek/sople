@@ -27,17 +27,13 @@
   - [x] Gdy zbierze monetę, wyświetl przez 0.3s grafikę 'radosny'
   - [x] Gdy stoi, wyświetl grafikę 'stoi'
   - [x] Gdy idzie, wyświetl grafikę 'idzie'
-<<<<<<< HEAD
   - [x] Dodanie kolizji do kaktusa
   - [ ] Na pustyni gracz ma mieć animację biegania :joy: 🏃🏃🏃
   - [x] Wyświetlanie żyć na pustyni
+  - [ ] Dodajemy zamiast kaktusa losowo skałę, kaktusa lub małego kaktusa
+
   - [ ] Game over na pustyni
   - [ ] Zapis osobny punktów co 1 sekundę
   - [ ] Gdy osiągnięto najlepszy wynik przywałaj grób
-=======
-  - [ ] Dodanie kolizji do kaktusa
-  - [ ] Na pustyni gracz ma mieć animację biegania
-  - [x] Wyświetlanie żyć na pustyni
->>>>>>> 45e1746c05bb5696bdaec94a5ae275e115dcf4d9
 
 
