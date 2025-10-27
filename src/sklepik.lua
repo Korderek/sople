@@ -6,9 +6,11 @@ local Sklepik = {
     aktualnaOferta = {}
 }
 
+
 Sklepik.oferty = {
     {
         nazwa = "Życie",
+        grafika = love.graphics.newImage("gfx/sklepik/serce.png"),
         cena = 10,
         dostepna = function(self)
             return zebraneMonety >= self.cena and zycia < maxZycia
@@ -21,6 +23,7 @@ Sklepik.oferty = {
     },
     {
         nazwa = "Puste Serce",
+        grafika = love.graphics.newImage("gfx/sklepik/puste-serce.png"),
         cena = 30,
         dostepna = function(self)
             return zebraneMonety >= self.cena
@@ -34,6 +37,7 @@ Sklepik.oferty = {
     },
     {
         nazwa = "Szybkość",
+        grafika = love.graphics.newImage("gfx/sklepik/szybkosc.png"),
         cena = 15,
         dostepna = function(self)
             return zebraneMonety >= self.cena
@@ -46,6 +50,7 @@ Sklepik.oferty = {
     },
     {
         nazwa = "Skin",
+        grafika = love.graphics.newImage("gfx/sklepik/losowy-skin.png"),
         cena = 50,
         dostepna = function(self)
             return zebraneMonety >= self.cena
@@ -58,6 +63,7 @@ Sklepik.oferty = {
     },
     {
         nazwa = "Wślizg",
+        grafika = love.graphics.newImage("gfx/sklepik/wslizg.png"),
         cena = 40,
         dostepna = function(self)
             return zebraneMonety >= self.cena and not wslizgAktywny
@@ -108,7 +114,7 @@ function Sklepik.draw()
     love.graphics.rectangle("fill", 0, 0, szerokosc, wysokosc)
 
     -- Okno
-    local boxW, boxH = 600, 400
+    local boxW, boxH = 600, 450
     local boxX, boxY = (szerokosc - boxW) / 2, (wysokosc - boxH) / 2
     love.graphics.setColor(0.2, 0.2, 0.2, 0.9)
     love.graphics.rectangle("fill", boxX, boxY, boxW, boxH)
@@ -119,20 +125,24 @@ function Sklepik.draw()
 
     -- Zamknięcie
     if UI.przycisk({
-        x = boxX + boxW - 40, y = boxY + 10, width = 30, height = 30
-    }, "X") then
+            x = boxX + boxW - 40, y = boxY + 10, width = 30, height = 30
+        }, "X") then
         Sklepik.zamknij()
     end
 
+    -- Liczba monet
+    love.graphics.draw(stosMonet, boxX + 10, boxY + boxH - 64)
+    love.graphics.print(zebraneMonety, boxX + 70, boxY + boxH - 69)
+
     -- Sloty
-    local startX, startY = boxX + 40, boxY + 80
+    local startX, startY = boxX + 55, boxY + 110
     local slotSize = 150
     local spacing = 20
     local kafelek = { x = startX, y = startY, width = slotSize, height = slotSize }
 
     for _, oferta in ipairs(Sklepik.aktualnaOferta) do
         local tekst = oferta.nazwa .. " (" .. oferta.cena .. ")"
-        if UI.przycisk(kafelek, tekst) and oferta:dostepna() then
+        if UI.przycisk_sklepik(kafelek, oferta.grafika, tekst, not oferta:dostepna()) then
             oferta:akcja()
         end
         kafelek.x = kafelek.x + slotSize + spacing

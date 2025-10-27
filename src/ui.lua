@@ -22,7 +22,7 @@ end
 function UI.przycisk(wymiary, tekst)
     local r, g, b, a = love.graphics.getColor() -- zapamiętujemy aktualny kolor
     local mysz_na_przycisku = czy_mysz_na_przycisku(wymiary)
-    local tekst = tekst or ""
+    tekst = tekst or ""
 
     local kolor_tla = { 1, 1, 1, 1 }
     local kolor_tekstu = { 0, 0, 0, 1 }
@@ -43,29 +43,35 @@ function UI.przycisk(wymiary, tekst)
 end
 
 -- Rysuje przycisk z tekstem, zwraca true jeśli został kliknięty
-function UI.przycisk_sklepik(wymiary, tekst, zablokowany)
+function UI.przycisk_sklepik(wymiary, grafika, tekst, zablokowany)
     local r, g, b, a = love.graphics.getColor() -- zapamiętujemy aktualny kolor
 
     local mysz_na_przycisku = czy_mysz_na_przycisku(wymiary)
-    local tekst = tekst or ""
+    tekst = tekst or ""
 
     -- ustawiamy kolor tła i tekstu
-    local kolor_tla = { 1, 1, 1, 1 }
-    local kolor_tekstu = { 0, 0, 0, 1 }
+    local kolor_tla = { .3, .3, .3, 1 }
+    local kolor_tekstu = { .7, .7, .7, 1 }
     if zablokowany then
-        kolor_tla = { .5, .5, .5, 1 }
+        kolor_tla = { 1, 1, 1, 0 }
         kolor_tekstu = { .3, .3, .3, 1 }
     elseif mysz_na_przycisku and lewy_przycisk.puszczony then
-        kolor_tla = { .8, .8, .8, 1 }
+        kolor_tla = { .5, .5, .5, 1 }
+        kolor_tekstu = { .9, .9, .9, 1 }
     elseif mysz_na_przycisku and lewy_przycisk.wcisniety then
-        kolor_tla = { .7, .7, .7, 1 }
+        kolor_tla = { .6, .6, .6, 1 }
+        kolor_tekstu = { 1, 1, 1, 1 }
     end
 
     -- rysujemy przycisk
     love.graphics.setColor(kolor_tla)
     love.graphics.rectangle("fill", wymiary.x, wymiary.y, wymiary.width, wymiary.height, 10)
     love.graphics.setColor(kolor_tekstu)
-    love.graphics.printCentered(tekst, font_small, wymiary.x, wymiary.y, wymiary.width, wymiary.height)
+    love.graphics.printCentered(tekst, font_small, wymiary.x, wymiary.y + wymiary.height, wymiary.width, 60)
+
+    if zablokowany then Shader.szarosc() end
+    love.graphics.drawCentered(grafika, wymiary.x, wymiary.y, wymiary.width, wymiary.height)
+    Shader.koniec()
 
     love.graphics.setColor(r, g, b, a) -- przywracamy poprzedni kolor
     return not zablokowany and mysz_na_przycisku and lewy_przycisk.klikniety
@@ -81,7 +87,7 @@ function UI.przycisk_swiat(x, y, grafika, nazwa, zablokowany)
         height = grafika:getHeight()
     }
     local mysz_na_przycisku = czy_mysz_na_przycisku(wymiary)
-    local nazwa = nazwa or ""
+    nazwa = nazwa or ""
 
     local kolor_tekstu = { 0, 0, 0, 1 }
     local kolor_obramowania = { 1, 1, 1, 1 }

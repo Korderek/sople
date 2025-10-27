@@ -1,0 +1,4 @@
+{
+  "runtime.version": "LuaJIT",
+  "diagnostics.disable": ["undefined-global", "lowercase-global"]
+}
