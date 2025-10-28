@@ -13,7 +13,7 @@ Sklepik.oferty = {
     {
         nazwa = "Życie",
         grafika = love.graphics.newImage("gfx/sklepik/serce.png"),
-        cena = 10,
+        cena = 5,
         dostepna = function(self)
             return zebraneMonety >= self.cena and zycia < maxZycia
         end,
@@ -26,15 +26,14 @@ Sklepik.oferty = {
     {
         nazwa = "Puste Serce",
         grafika = love.graphics.newImage("gfx/sklepik/puste-serce.png"),
-        cena = 30,
+        cena = 10,
         dostepna = function(self)
-            return zebraneMonety >= self.cena
+            return zebraneMonety >= self.cena and maxZycia < 8
         end,
         akcja = function(self)
             zebraneMonety = zebraneMonety - self.cena
             maxZycia = maxZycia + 1
-            zycia = zycia + 1
-            self.cena = self.cena + 20
+            self.cena = self.cena + 15
         end
     },
     {
@@ -47,7 +46,7 @@ Sklepik.oferty = {
         akcja = function(self)
             zebraneMonety = zebraneMonety - self.cena
             gracz.przyspieszenie = gracz.przyspieszenie + 1
-            self.cena = self.cena + 5
+            self.cena = self.cena + 10
         end
     },
     {
@@ -73,7 +72,6 @@ Sklepik.oferty = {
         akcja = function(self)
             zebraneMonety = zebraneMonety - self.cena
             wslizgAktywny = true
-            self.cena = self.cena + 30
         end
     }
 }
@@ -81,12 +79,14 @@ Sklepik.oferty = {
 -- Losowanie 3 unikalnych ofert
 function Sklepik.losujOferte()
     Sklepik.aktualnaOferta = {}
-    local pool = { unpack(Sklepik.oferty) }
+    local pool = {}
+    for i = 1, #Sklepik.oferty do
+        table.insert(pool, i)
+    end
     for i = 1, 3 do
         if #pool == 0 then break end
-        local index = love.math.random(1, #pool)
-        table.insert(Sklepik.aktualnaOferta, pool[index])
-        table.remove(pool, index)
+        local index = table.remove(pool, love.math.random(1, #pool))
+        table.insert(Sklepik.aktualnaOferta, Sklepik.oferty[index])
     end
 end
 

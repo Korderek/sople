@@ -190,8 +190,7 @@ function love.update(dt)
             najlepszy_wynik = punkty
         end
 
-        local spioszek = (gracz.skin == spioszekImg)
-        Sople.update(dt, spioszek)
+        Sople.update(dt)
         Monety.update(dt)
 
         -- Ruch i kolizja sklepiku

@@ -29,6 +29,12 @@ function Sople.update(dt)
         czas_ostatniego_dodania = czas
     end
 
+    if gracz.skin == spioszekImg then
+        predkosc = 4
+    else
+        predkosc = 6
+    end
+
     for _, sopel in ipairs(listaSopli) do
         sopel.y = sopel.y + predkosc
         if sopel.y > wysokosc then

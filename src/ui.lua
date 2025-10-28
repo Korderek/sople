@@ -122,7 +122,7 @@ function UI.rysujSerca()
     local skala = 1.0
     local rozmiar = skala * serce:getWidth()
     local x = szerokosc - 5
-    for i = 1, 3 do
+    for i = 1, maxZycia do
         x = x - rozmiar - 5
         local y = 10
         if i <= zycia then
