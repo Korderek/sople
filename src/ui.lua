@@ -65,11 +65,15 @@ function UI.przycisk_sklepik(wymiary, grafika, tekst, zablokowany)
 
     -- rysujemy przycisk
     love.graphics.setColor(kolor_tla)
-    love.graphics.rectangle("fill", wymiary.x, wymiary.y, wymiary.width, wymiary.height, 10)
+    love.graphics.rectangle("fill", wymiary.x, wymiary.y, wymiary.width, wymiary.height, 6)
     love.graphics.setColor(kolor_tekstu)
     love.graphics.printCentered(tekst, font_small, wymiary.x, wymiary.y + wymiary.height, wymiary.width, 60)
 
-    if zablokowany then Shader.szarosc() end
+    if zablokowany then
+        Shader.szarosc()
+    elseif mysz_na_przycisku then
+        Shader.obramowanie(30, { 1, 1, 1, 1 })
+    end
     love.graphics.drawCentered(grafika, wymiary.x, wymiary.y, wymiary.width, wymiary.height)
     Shader.koniec()
 

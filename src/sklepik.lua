@@ -1,6 +1,8 @@
 local UI = require("src.ui")
 local Dialog = require("src.dialog")
 
+local wyjscieImg = love.graphics.newImage("gfx/sklepik/wyjscie.png")
+
 local Sklepik = {
     aktywny = false,
     aktualnaOferta = {}
@@ -124,9 +126,7 @@ function Sklepik.draw()
     love.graphics.printf("Sklepik", boxX, boxY + 10, boxW, "center")
 
     -- Zamknięcie
-    if UI.przycisk({
-            x = boxX + boxW - 40, y = boxY + 10, width = 30, height = 30
-        }, "X") then
+    if UI.przycisk_sklepik({ x = boxX + boxW - 85, y = boxY + 15, width = 70, height = 70 }, wyjscieImg, "", false) then
         Sklepik.zamknij()
     end
 

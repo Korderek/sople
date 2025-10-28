@@ -8,7 +8,7 @@ local monetaImg = love.graphics.newImage("gfx/moneta.png")
 
 -- Generuje przekazaną parametrem liczbę monet
 function Monety.spawn(liczba_monet)
-    local liczba_monet = liczba_monet or 1
+    liczba_monet = liczba_monet or 1
     for _ = 1, liczba_monet do
         table.insert(listaMonet, Monety.losowaMoneta())
     end
