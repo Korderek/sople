@@ -327,3 +327,17 @@ function love.graphics.drawStretched(drawable, x, y, width, height)
     local sy = height / drawable:getHeight()
     love.graphics.draw(drawable, x, y, 0, sx, sy)
 end
+
+-- Rysuje grafikę z zapętleniem w poziomie
+function love.graphics.loopHorizontally(drawable, x, y, sx, sy)
+    local w = drawable:getWidth() * sx
+    local startX = x % w
+    local startY = y
+    if startX > 0 then
+        startX = startX - w
+    end
+    while startX < szerokosc do
+        love.graphics.draw(drawable, startX, startY, 0, sx, sy)
+        startX = startX + w
+    end
+end

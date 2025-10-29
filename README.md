@@ -14,9 +14,9 @@
 - [x] kilka opcji w sklepiku - szybkość, życia, lepszy skin
 - [x] rzeczy w sklepie kosztuja monety i jest cena pokazana
 - [x] (trudne) na czas wizyty w sklepie gra sie zatrzymuje
-- [ ] Śpioszek - Gdy gracz jest śpioszkiem, sople lecą 10% wolniej
-- [ ] Dodaj nowe przedmioty w sklepiku:
-  - [ ] Sklepik - nowy przedmiot - puste serce - zwiększa limit serc o 1
+- [x] Śpioszek - Gdy gracz jest śpioszkiem, sople lecą 10% wolniej
+- [x] Dodaj nowe przedmioty w sklepiku:
+  - [x] Sklepik - nowy przedmiot - puste serce - zwiększa limit serc o 1
   - [x] Sklepik - nowy przedmiot - wślizg - odblokowuje umiejętność wślizgu - zwiększenie prędkości na 0.3s do 10 po kliknięciu "s" na klawiaturze
 - [x] Po otwarciu sklepu wylosuj 3 towary, które będą możliwe do kupienia
 - [x] Wyświetl grafiki planet na ekranie wyboru świata:
@@ -35,5 +35,3 @@
   - [ ] Game over na pustyni
   - [ ] Zapis osobny punktów co 1 sekundę
   - [ ] Gdy osiągnięto najlepszy wynik przywałaj grób
-
-
