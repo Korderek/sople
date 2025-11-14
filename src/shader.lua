@@ -1,20 +1,28 @@
 local Shader = {}
 
 local obramowanie = love.graphics.newShader([[
-    extern number outline_width = 30.0;
-    extern vec4 outline_color = vec4(1.0, 1.0, 1.0, 1.0);
+    uniform float outline_width;
+    uniform vec4 outline_color;
+
+    const float MAX_OUTLINE = 50.0;
+    const float PI2 = 2.0 * 3.14159265358979323846;
+    const float DIRS = 8.0;
+
     vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords)
     {
-        float threshold = 0.1; // alpha threshold
+        float threshold = 0.05; // alpha threshold
         float outline = 0.0;
         float alpha = Texel(texture, texture_coords).a;
 
         if (alpha < threshold) {
-            // Check surrounding pixels within outline_width
-            for (float x = -outline_width; x <= outline_width; x++) {
-                for (float y = -outline_width; y <= outline_width; y++) {
-                    if (x*x + y*y > outline_width*outline_width) continue;
-                    vec2 offset = vec2(x, y) / love_ScreenSize.yx;
+            for (float i = 0.0; i < DIRS; i++) {
+                for (float r = 0.0; r <= MAX_OUTLINE; r++) {
+                    if (r > outline_width) break;
+                    float angle = i * PI2 / DIRS;
+                    float x = r * cos(angle);
+                    float y = r * sin(angle);
+                    vec2 pixel = 1.0 / love_ScreenSize.yx;
+                    vec2 offset = vec2(x, y) * pixel;
                     float a = Texel(texture, texture_coords + offset).a;
                     if (a >= threshold) {
                         outline = 1.0;
@@ -41,7 +49,8 @@ local szarosc = love.graphics.newShader([[
 ]])
 
 function Shader.obramowanie(grubosc, kolor)
-    obramowanie:send("outline_width", grubosc or 20)
+    if grubosc <= 0 then return end
+    obramowanie:send("outline_width", grubosc or 30)
     obramowanie:send("outline_color", kolor or { 1, 1, 1, 1 })
     love.graphics.setShader(obramowanie)
 end

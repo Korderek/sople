@@ -2,7 +2,9 @@ build-exclude.txt
 build-web.cmd
 .luarc.json
 .zed
-.git/
+.git
 game.love
 web.zip
 .gitignore
+.vscode
+~*

@@ -6,5 +6,9 @@
     "label": "Run Love2D Game",
     "command": "love",
     "args": ["."]
+  },
+  {
+    "label": "Compile for Web",
+    "command": "./build-web.cmd"
   }
 ]

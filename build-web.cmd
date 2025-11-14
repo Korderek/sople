@@ -3,9 +3,15 @@ setlocal
 
 rem === CONFIGURATION ===
 set GAME_NAME=game
+set GAME_TITLE="Sople"
 set LOVE_JS_PATH=love.js
 set OUTPUT_DIR=web
 set EXCLUDE_LIST=build-exclude.txt
+
+rem == STEP 0: Clean up previous build
+echo [0/4] Cleaning up previous build...
+if exist "%GAME_NAME%.love" del "%GAME_NAME%.love"
+if exist "%OUTPUT_DIR%" rmdir /s /q "%OUTPUT_DIR%"
 
 rem === STEP 1: Create game.love ===
 echo.
@@ -18,7 +24,7 @@ if not exist "%EXCLUDE_LIST%" (
     echo. > "%EXCLUDE_LIST%"
 )
 
-7z a -tzip "%GAME_NAME%.love" * -x@%EXCLUDE_LIST%
+7z a -tzip "%GAME_NAME%.love" * -xr@%EXCLUDE_LIST%
 if errorlevel 1 (
     echo Error: Failed to create .love file
     exit /b 1
@@ -33,7 +39,7 @@ echo [2/3] Building web version with love.js...
 rem Delete old build
 if exist "%OUTPUT_DIR%" rmdir /s /q "%OUTPUT_DIR%"
 
-CALL npx love.js.cmd "%GAME_NAME%.love" "%OUTPUT_DIR%" -t "Polowace" -c
+CALL npx love.js.cmd "%GAME_NAME%.love" "%OUTPUT_DIR%" --title "%GAME_TITLE%" --memory 20000000 -c
 if errorlevel 1 (
     echo Error: love.js build failed
     exit /b 1
