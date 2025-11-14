@@ -1,0 +1,7 @@
+build-exclude.txt
+build-web.cmd
+.luarc.json
+.zed
+game.love
+web.zip
+.gitignore
