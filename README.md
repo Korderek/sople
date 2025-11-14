@@ -30,8 +30,11 @@
   - [x] Dodanie kolizji do kaktusa
   - [ ] Na pustyni gracz ma mieć animację biegania :joy: 🏃🏃🏃
   - [x] Wyświetlanie żyć na pustyni
-  - [ ] Dodajemy zamiast kaktusa losowo skałę, kaktusa lub małego kaktusa
+  - [x] Dodajemy zamiast kaktusa losowo skałę, kaktusa lub małego kaktusa
 
   - [ ] Game over na pustyni
-  - [ ] Zapis osobny punktów co 1 sekundę
-  - [ ] Gdy osiągnięto najlepszy wynik przywałaj grób
+  - [ ] w sklepiku Wyższy skok NA PUSTYNI
+  - [ ] naprawić przedmiot szybkość na pustyni
+  - [ ] muzyka
+  - [ ] dźwięki 
+

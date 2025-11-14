@@ -45,7 +45,7 @@ function love.load()
     szybkosci_tla = { 0.02, 0.05, 0.1 }
     czerwien = 0
 
-    debug = false -- włącz debugowanie
+    debug = true -- włącz debugowanie
 
     -- Fonty
     font = love.graphics.newFont("assets/fonts/font.ttf", 40)

@@ -3,9 +3,8 @@ local UI = require("src.ui")
 local Player = require("src.player")
 local Efekty = require("src.efekty")
 local Wyzwania = require("planety.pustynia.wyzwania")
+local Sklepik = require("src.sklepik")
 
-
-local listaziemi = {}
 local listaprzeszkod = {}
 
 local poziomZiemi = 400
@@ -20,6 +19,7 @@ local wielbladprzodImg = love.graphics.newImage("gfx/wielblad-przod.png")
 local wielbladtylImg = love.graphics.newImage("gfx/wielblad-tyl.png")
 
 Pustynia.load = function()
+    dystans = 0
     czas = 0
     punkty = 0
     wynik_koniec = 0
@@ -29,14 +29,6 @@ Pustynia.load = function()
     gracz.x = 300
     gracz.predkoscx = 10
     gracz.predkoscy = 0
-
-
-    for i = 0, 2 do
-        table.insert(listaziemi, {
-            x = i * ziemiaImg:getWidth(),
-            y = 800,
-        })
-    end
 end
 function nowyptak(x, y)
     table.insert(listaprzeszkod, {
@@ -45,7 +37,21 @@ function nowyptak(x, y)
         tekstura = ptakImg,
         predkosc = 15,
         width = ptakImg:getWidth(),
-        height = ptakImg:getHeight()
+        height = ptakImg:getHeight(),
+    })
+end
+
+function nowyptak(x, y)
+    table.insert(listaprzeszkod, {
+        x = szerokosc + (x or 0),
+        y = poziomZiemi + (y or 0),
+        tekstura = ptakImg,
+        predkosc = 15,
+        width = ptakImg:getWidth(),
+        height = ptakImg:getHeight(),
+        po_kolizji = function()
+
+        end
     })
 end
 
@@ -56,7 +62,14 @@ function nowykaktus(x)
         tekstura = kaktusImg,
         predkosc = 0,
         width = kaktusImg:getWidth(),
-        height = kaktusImg:getHeight()
+        height = kaktusImg:getHeight(),
+        aktywny = true,
+        po_kolizji = function(to)
+            if to.aktywny then
+                to.aktywny = false
+                Sklepik.otworz()
+            end
+        end
     })
 end
 
@@ -97,6 +110,7 @@ function Pustynia.update(dt)
     gracz.predkoscx = gracz.predkoscx + 0.001
     punkty = punkty + gracz.predkoscx * dt / 10
     czas = czas + dt
+    dystans = dystans - gracz.predkoscx
 
     if not aktywne_wyzwanie then
         aktywne_wyzwanie = Wyzwania.losuj()
@@ -113,19 +127,16 @@ function Pustynia.update(dt)
     for _, przeszkoda in ipairs(listaprzeszkod) do
         --Gdy gracz trafiony
         if niesmiertelny < 0 and kolizja(gracz, przeszkoda) then
-            zycia = zycia - 1
-            niesmiertelny = 2
-            wstrzasy = 0.3
-            oberwal = 1
+            if przeszkoda.po_kolizji then
+                przeszkoda:po_kolizji()
+            else
+                zycia = zycia - 1
+                niesmiertelny = 2
+                wstrzasy = 0.3
+                oberwal = 1
+            end
         end
         przeszkoda.x = przeszkoda.x - przeszkoda.predkosc - gracz.predkoscx
-    end
-
-    for _, z in ipairs(listaziemi) do
-        z.x = z.x - gracz.predkoscx
-        if z.x < -ziemiaImg:getWidth() then
-            z.x = szerokosc
-        end
     end
 
     local przyspieszenie = 0
@@ -145,14 +156,14 @@ Pustynia.draw = function()
     love.graphics.drawStretched(pustyniaImg, 0, 0, szerokosc, wysokosc)
     love.graphics.setBackgroundColor(0.9, 0.8, 0.5)
     Efekty.wstrzasyZMoca(10)
-    for _, z in ipairs(listaziemi) do
-        love.graphics.drawStretched(ziemiaImg, z.x, z.y, ziemiaImg:getWidth(), ziemiaImg:getHeight())
-    end
+    love.graphics.loopHorizontally(ziemiaImg, dystans, 800, 1, 1)
     for _, przeszkoda in ipairs(listaprzeszkod) do
         love.graphics.drawCentered(przeszkoda.tekstura, przeszkoda.x, przeszkoda.y, 1, 1)
+        love.graphics.rectangleDebug(przeszkoda.x - przeszkoda.width / 2, przeszkoda.y - przeszkoda.height / 2,
+            przeszkoda.width, przeszkoda.height)
     end
     Player.draw()
-
+    Sklepik.draw()
     UI.rysujSerca()
     love.graphics.print(punkty, 10, 10)
 end

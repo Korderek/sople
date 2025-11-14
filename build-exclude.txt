@@ -2,6 +2,7 @@ build-exclude.txt
 build-web.cmd
 .luarc.json
 .zed
+.git/
 game.love
 web.zip
 .gitignore
