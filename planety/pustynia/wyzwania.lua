@@ -1,0 +1,86 @@
+local Wyzwania = {}
+
+local function szansa(procent)
+    return love.math.random(100) <= procent
+end
+
+local listawyzwan = {
+    {
+        nazwa = "kaktus",
+        przeszkody = function()
+            nowykaktus(love.math.random(200, 1000))
+        end,
+        szerokosc = -100
+    },
+    {
+        nazwa = "kilka kaktusów",
+        przeszkody = function()
+            if szansa(30) then nowykaktus(369) end
+            nowykaktus(793)
+            if szansa(50) then nowykaktus(1294) end
+        end,
+        szerokosc = -200
+    },
+    {
+        nazwa = "kilka sępów",
+        przeszkody = function()
+            if szansa(50) then nowyptak(369, 100) end
+            nowyptak(793, 150)
+            if szansa(50) then nowyptak(1294, 120) end
+        end,
+        szerokosc = -200
+    },
+    {
+        nazwa = "las kaktusów",
+        przeszkody = function()
+            if szansa(50) then nowykaktus(259) end
+            if szansa(50) then nowykaktus(1037) end
+            if szansa(50) then nowykaktus(1859) end
+            if szansa(50) then nowyszkielet(2638) end
+            if szansa(50) then nowykaktus(3925) end
+        end,
+        szerokosc = -200
+    },
+    {
+        nazwa = "sęp",
+        przeszkody = function()
+            nowyptak(1037, 150)
+        end,
+        szerokosc = -200
+    },
+    {
+        nazwa = "wielbłąd",
+        przeszkody = function()
+            nowywielbladprzod(1500)
+            nowywielbladtyl(1500)
+            if szansa(30) then nowykaktus(2638) end
+        end,
+        szerokosc = -200
+    },
+    {
+        nazwa = "dwa wielbłądy",
+        przeszkody = function()
+            nowywielbladprzod(1500)
+            nowywielbladtyl(1500)
+            if szansa(10) then nowykaktus(2638) end
+            nowywielbladprzod(3500)
+            nowywielbladtyl(3500)
+        end,
+        szerokosc = -200
+    },
+    {
+        nazwa = "sęp i kaktus",
+        przeszkody = function()
+            if szansa(30) then nowykaktus(1638) end
+            nowyptak(2900, 150)
+            if szansa(70) then nowykaktus(3638) end
+        end,
+        szerokosc = -200
+    }
+}
+
+function Wyzwania.losuj()
+    return listawyzwan[love.math.random(#listawyzwan)]
+end
+
+return Wyzwania

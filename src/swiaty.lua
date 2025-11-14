@@ -1,7 +1,7 @@
 local Swiaty = {}
 local UI = require("src.ui")
 local Efekty = require("src.efekty")
-local Pustynia = require("planety.pustynia")
+local Pustynia = require("planety.pustynia.pustynia")
 local klodka = love.graphics.newImage("gfx/klodka.png")
 
 local planety = {

@@ -6,7 +6,7 @@ local ladowanieImg = love.graphics.newImage("gfx/ladowanie.png")
 local ladowanie = { x = 10000, w_trakcie = false }
 
 local latarkaImg = love.graphics.newImage("gfx/latarka.png")
-local latarkaTex = love.graphics.newCanvas()
+local latarkaTex = love.graphics.newCanvas(love.graphics.getWidth() * 1.2, love.graphics.getHeight() * 1.2)
 
 function Efekty.wstrzasyZMoca(moc)
     if wstrzasy > 0 then
@@ -25,13 +25,13 @@ function Efekty.latarka(x, y)
         -- rysujemy teraz na latarkaTex
         love.graphics.clear(0.2, 0.2, 0.2, 1) -- jak ciemno ma być poza latarką?
         love.graphics.setBlendMode("add", "premultiplied")
-        love.graphics.draw(latarkaImg, x - latarkaImg:getWidth() / 2, y - latarkaImg:getHeight() / 2)
+        love.graphics.draw(latarkaImg, x - latarkaImg:getWidth() / 2 + 100, y - latarkaImg:getHeight() / 2 + 100)
     end -- wracamy do rysowania na głównym ekranie
     love.graphics.setCanvas()
 
     -- wyświetl teksturę w trybie 'multiply'
     love.graphics.setBlendMode("multiply", "premultiplied")
-    love.graphics.draw(latarkaTex, 0, 0)
+    love.graphics.draw(latarkaTex, -100, -100)
     love.graphics.setBlendMode("alpha")
 end
 

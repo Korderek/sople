@@ -8,7 +8,7 @@ local Zapis = require("src.zapis")
 local Sklepik = require("src.sklepik")
 local Dialog = require("src.dialog")
 local Swiaty = require("src.swiaty")
-local Pustynia = require("planety.pustynia")
+local Pustynia = require("planety.pustynia.pustynia")
 
 local flux = require("plugins.flux")
 

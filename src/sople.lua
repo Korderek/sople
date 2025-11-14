@@ -30,7 +30,7 @@ function Sople.update(dt)
     end
 
     if gracz.skin == spioszekImg then
-        predkosc = 4
+        predkosc = 3
     else
         predkosc = 6
     end
