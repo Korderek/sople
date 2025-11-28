@@ -11,6 +11,8 @@ local poziomZiemi = 730
 
 
 local kaktusImg = love.graphics.newImage("gfx/kaktus.png")
+local kaktusImg2 = love.graphics.newImage("gfx/maly-kaktus.png")
+local straganImg = love.graphics.newImage("gfx/stragan.png")
 local ziemiaImg = love.graphics.newImage("gfx/ziemia.png")
 local pustyniaImg = love.graphics.newImage("gfx/pustynia.png")
 local ptakImg = love.graphics.newImage("gfx/sep.png")
@@ -43,21 +45,25 @@ function nowyptak(x, y)
 end
 
 function nowykaktus(x)
-    table.insert(listaprzeszkod, {
-        x = szerokosc + (x or 0),
-        y = poziomZiemi - love.math.random(70, 110),
-        tekstura = kaktusImg,
-        predkosc = 0,
-        width = kaktusImg:getWidth(),
-        height = kaktusImg:getHeight(),
-        aktywny = true,
-        po_kolizji = function(to)
-            if to.aktywny then
-                to.aktywny = false
-                Sklepik.otworz()
-            end
-        end
-    })
+    if szansa(50) then
+        table.insert(listaprzeszkod, {
+            x = szerokosc + (x or 0),
+            y = poziomZiemi - love.math.random(70, 110),
+            tekstura = kaktusImg,
+            predkosc = 0,
+            width = kaktusImg:getWidth(),
+            height = kaktusImg:getHeight()
+        })
+    else
+        table.insert(listaprzeszkod, {
+            x = szerokosc + (x or 0),
+            y = poziomZiemi - love.math.random(70, 0),
+            tekstura = kaktusImg2,
+            predkosc = 0,
+            width = kaktusImg:getWidth(),
+            height = kaktusImg:getHeight()
+        })
+    end
 end
 
 function nowyszkielet(x)
@@ -90,6 +96,24 @@ function nowywielbladtyl(x)
         predkosc = 0,
         width = wielbladtylImg:getWidth(),
         height = wielbladtylImg:getHeight()
+    })
+end
+
+function nowysklepik(x)
+    table.insert(listaprzeszkod, {
+        x = szerokosc + (x or 0),
+        y = poziomZiemi - 200,
+        tekstura = straganImg,
+        predkosc = 0,
+        width = straganImg:getWidth(),
+        height = straganImg:getHeight(),
+        aktywny = true,
+        po_kolizji = function(self)
+            if self.aktywny then
+                Sklepik.otworz()
+                self.aktywny = false
+            end
+        end
     })
 end
 
@@ -151,6 +175,6 @@ Pustynia.draw = function()
     Player.draw()
     Sklepik.draw()
     UI.rysujSerca()
-    love.graphics.print(punkty, 10, 10)
+    love.graphics.print(math.floor(punkty), 10, 10)
 end
 return Pustynia

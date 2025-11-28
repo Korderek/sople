@@ -1,6 +1,6 @@
 local Wyzwania = {}
 
-local function szansa(procent)
+function szansa(procent)
     return love.math.random(100) <= procent
 end
 
@@ -76,11 +76,19 @@ local listawyzwan = {
             if szansa(70) then nowykaktus(3638) end
         end,
         szerokosc = -200
+    },
+    {
+        nazwa = "sklepik",
+        przeszkody = function()
+            nowysklepik(500)
+        end,
+        szerokosc = -1000
     }
 }
 
 function Wyzwania.losuj()
-    return listawyzwan[love.math.random(#listawyzwan)]
+    return listawyzwan[2]
+    --return listawyzwan[love.math.random(#listawyzwan)]
 end
 
 return Wyzwania

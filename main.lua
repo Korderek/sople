@@ -208,7 +208,9 @@ function love.load()
     zebraneMonety = zapisek.monety
 
     stan = { menu = {}, gra = {}, przegrana = {}, swiaty = {}, pustynia = {} }
-    stanGry = stan.menu
+    -- Zmiana startowej lokacji na pustynię
+    stanGry = stan.pustynia
+    Pustynia.load()
 
     love.graphics.setFont(font)
 
@@ -221,7 +223,7 @@ end
 ---------------------
 function love.update(dt)
     if zycia < 1 and wstrzasy < 0 and (stanGry == stan.gra or stanGry == stan.pustynia) then
-        wynik_koniec = punkty
+        wynik_koniec = math.floor(punkty)
         losowyTekst = teksty[love.math.random(#teksty)]
         Efekty.rozpocznijLadowanie(function() stanGry = stan.przegrana end)
     end
