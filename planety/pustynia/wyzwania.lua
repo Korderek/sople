@@ -24,9 +24,9 @@ local listawyzwan = {
     {
         nazwa = "kilka sępów",
         przeszkody = function()
-            if szansa(50) then nowyptak(369, 100) end
+            if szansa(50) then nowyptak(369, 500) end
             nowyptak(793, 150)
-            if szansa(50) then nowyptak(1294, 120) end
+            if szansa(50) then nowyptak(1294, 480) end
         end,
         szerokosc = -200
     },
@@ -44,7 +44,7 @@ local listawyzwan = {
     {
         nazwa = "sęp",
         przeszkody = function()
-            nowyptak(1037, 150)
+            nowyptak(1037, 450)
         end,
         szerokosc = -200
     },
