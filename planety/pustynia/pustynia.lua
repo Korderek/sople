@@ -7,7 +7,7 @@ local Sklepik = require("src.sklepik")
 
 local listaprzeszkod = {}
 
-local poziomZiemi = 400
+local poziomZiemi = 730
 
 
 local kaktusImg = love.graphics.newImage("gfx/kaktus.png")
@@ -25,40 +25,27 @@ Pustynia.load = function()
     wynik_koniec = 0
     aktywne_wyzwanie = nil
 
-    gracz.y = 800
+    gracz.y = poziomZiemi
     gracz.x = 300
     gracz.predkoscx = 10
     gracz.predkoscy = 0
 end
-function nowyptak(x, y)
-    table.insert(listaprzeszkod, {
-        x = szerokosc + (x or 0),
-        y = poziomZiemi + (y or 0),
-        tekstura = ptakImg,
-        predkosc = 15,
-        width = ptakImg:getWidth(),
-        height = ptakImg:getHeight(),
-    })
-end
 
 function nowyptak(x, y)
     table.insert(listaprzeszkod, {
         x = szerokosc + (x or 0),
-        y = poziomZiemi + (y or 0),
+        y = poziomZiemi - (y or 0),
         tekstura = ptakImg,
-        predkosc = 15,
+        predkosc = 8,
         width = ptakImg:getWidth(),
         height = ptakImg:getHeight(),
-        po_kolizji = function()
-
-        end
     })
 end
 
 function nowykaktus(x)
     table.insert(listaprzeszkod, {
         x = szerokosc + (x or 0),
-        y = 800,
+        y = poziomZiemi - love.math.random(70, 110),
         tekstura = kaktusImg,
         predkosc = 0,
         width = kaktusImg:getWidth(),
@@ -76,7 +63,7 @@ end
 function nowyszkielet(x)
     table.insert(listaprzeszkod, {
         x = szerokosc + (x or 0),
-        y = 800,
+        y = poziomZiemi,
         tekstura = szkieletImg,
         predkosc = 0,
         width = szkieletImg:getWidth(),
@@ -87,7 +74,7 @@ end
 function nowywielbladprzod(x)
     table.insert(listaprzeszkod, {
         x = szerokosc + (x or 0),
-        y = 800,
+        y = poziomZiemi - 200,
         tekstura = wielbladprzodImg,
         predkosc = 0,
         width = wielbladprzodImg:getWidth(),
@@ -98,7 +85,7 @@ end
 function nowywielbladtyl(x)
     table.insert(listaprzeszkod, {
         x = szerokosc + (x or 0),
-        y = 800,
+        y = poziomZiemi - 200,
         tekstura = wielbladtylImg,
         predkosc = 0,
         width = wielbladtylImg:getWidth(),
@@ -140,14 +127,14 @@ function Pustynia.update(dt)
     end
 
     local przyspieszenie = 0
-    if love.keyboard.isDown("w") and gracz.y == 800 then
+    if love.keyboard.isDown("w") and gracz.y == poziomZiemi then
         przyspieszenie = -37
     end
     przyspieszenie = przyspieszenie + 1.56
     gracz.predkoscy = gracz.predkoscy + przyspieszenie
     gracz.y = gracz.y + gracz.predkoscy
-    if gracz.y > 800 then
-        gracz.y = 800
+    if gracz.y > poziomZiemi then
+        gracz.y = poziomZiemi
         gracz.predkoscy = 0
     end
 end
@@ -156,11 +143,10 @@ Pustynia.draw = function()
     love.graphics.drawStretched(pustyniaImg, 0, 0, szerokosc, wysokosc)
     love.graphics.setBackgroundColor(0.9, 0.8, 0.5)
     Efekty.wstrzasyZMoca(10)
-    love.graphics.loopHorizontally(ziemiaImg, dystans, 800, 1, 1)
+    love.graphics.loopHorizontally(ziemiaImg, dystans, poziomZiemi + 20, 1, 1)
     for _, przeszkoda in ipairs(listaprzeszkod) do
-        love.graphics.drawCentered(przeszkoda.tekstura, przeszkoda.x, przeszkoda.y, 1, 1)
-        love.graphics.rectangleDebug(przeszkoda.x - przeszkoda.width / 2, przeszkoda.y - przeszkoda.height / 2,
-            przeszkoda.width, przeszkoda.height)
+        love.graphics.draw(przeszkoda.tekstura, przeszkoda.x, przeszkoda.y)
+        love.graphics.rectangleDebug(przeszkoda.x, przeszkoda.y, przeszkoda.width, przeszkoda.height)
     end
     Player.draw()
     Sklepik.draw()
