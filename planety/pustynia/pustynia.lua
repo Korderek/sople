@@ -26,6 +26,7 @@ Pustynia.load = function()
     punkty = 0
     wynik_koniec = 0
     aktywne_wyzwanie = nil
+    wslizg = 0
 
     gracz.y = poziomZiemi
     gracz.x = 300
@@ -118,6 +119,14 @@ function nowysklepik(x)
 end
 
 function Pustynia.update(dt)
+    if wslizg < -1 and love.keyboard.isDown("s") then
+        --rozpoczęcie wślizgu
+        wslizg = 0.4
+        gracz.predkoscx = 15
+    end
+    if wslizg < 0 then
+        gracz.predkoscx = 10
+    end
     gracz.predkoscx = gracz.predkoscx + 0.001
     punkty = punkty + gracz.predkoscx * dt / 10
     czas = czas + dt
