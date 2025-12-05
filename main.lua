@@ -178,6 +178,12 @@ function love.load()
         predkosc = 0,
         idzie = true
     }
+    function gracz.obrywa()
+        zycia = zycia - 1
+        niesmiertelny = 2
+        wstrzasy = 0.3
+        oberwal = 1
+    end
 
     sklepik = { x = love.math.random(0, szerokosc - 50), y = -100, width = 100, height = 100 }
 

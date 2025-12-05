@@ -19,6 +19,7 @@ local animacje = { -- wymiary i położenie klatek animacji na teksturze
     }
 }
 
+
 function Player.draw()
     local scale_x = gracz.kierunek == "prawo" and gracz.scale or -gracz.scale
     local scale_y = gracz.scale

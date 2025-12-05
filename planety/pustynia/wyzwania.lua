@@ -51,8 +51,7 @@ local listawyzwan = {
     {
         nazwa = "wielbłąd",
         przeszkody = function()
-            nowywielbladprzod(1500)
-            nowywielbladtyl(1500)
+            nowywielblad(1500)
             if szansa(30) then nowykaktus(2638) end
         end,
         szerokosc = -200
@@ -60,11 +59,9 @@ local listawyzwan = {
     {
         nazwa = "dwa wielbłądy",
         przeszkody = function()
-            nowywielbladprzod(1500)
-            nowywielbladtyl(1500)
+            nowywielblad(1500)
             if szansa(10) then nowykaktus(2638) end
-            nowywielbladprzod(3500)
-            nowywielbladtyl(3500)
+            nowywielblad(3500)
         end,
         szerokosc = -200
     },
@@ -87,7 +84,7 @@ local listawyzwan = {
 }
 
 function Wyzwania.losuj()
-    return listawyzwan[2]
+    return listawyzwan[6]
     --return listawyzwan[love.math.random(#listawyzwan)]
 end
 

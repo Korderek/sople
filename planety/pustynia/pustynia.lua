@@ -27,6 +27,7 @@ Pustynia.load = function()
     wynik_koniec = 0
     aktywne_wyzwanie = nil
     wslizg = 0
+    wslizg_aktywny = false
 
     gracz.y = poziomZiemi
     gracz.x = 300
@@ -78,26 +79,39 @@ function nowyszkielet(x)
     })
 end
 
-function nowywielbladprzod(x)
+local function nowywielbladprzod(x)
     table.insert(listaprzeszkod, {
         x = szerokosc + (x or 0),
         y = poziomZiemi - 200,
         tekstura = wielbladprzodImg,
         predkosc = 0,
         width = wielbladprzodImg:getWidth(),
-        height = wielbladprzodImg:getHeight()
+        height = wielbladprzodImg:getHeight(),
+        po_kolizji = function(self)
+            if wslizg > -0.5 then
+                --unik
+            else
+                gracz.obrywa()
+            end
+        end
     })
 end
 
-function nowywielbladtyl(x)
+local function nowywielbladtyl(x)
     table.insert(listaprzeszkod, {
         x = szerokosc + (x or 0),
         y = poziomZiemi - 200,
         tekstura = wielbladtylImg,
         predkosc = 0,
         width = wielbladtylImg:getWidth(),
-        height = wielbladtylImg:getHeight()
+        height = wielbladtylImg:getHeight(),
+        po_kolizji = function() end
     })
+end
+
+function nowywielblad(x)
+    nowywielbladprzod(x)
+    nowywielbladtyl(x)
 end
 
 function nowysklepik(x)
@@ -121,12 +135,16 @@ end
 function Pustynia.update(dt)
     if wslizg < -1 and love.keyboard.isDown("s") then
         --rozpoczęcie wślizgu
+        wslizg_aktywny = true
         wslizg = 0.4
-        gracz.predkoscx = 15
+        gracz.predkoscx = gracz.predkoscx + 10
     end
-    if wslizg < 0 then
-        gracz.predkoscx = 10
+    if wslizg < 0 and wslizg_aktywny == true then
+        gracz.predkoscx = gracz.predkoscx - 10
+        wslizg_aktywny = false
     end
+
+
     gracz.predkoscx = gracz.predkoscx + 0.001
     punkty = punkty + gracz.predkoscx * dt / 10
     czas = czas + dt
@@ -150,10 +168,7 @@ function Pustynia.update(dt)
             if przeszkoda.po_kolizji then
                 przeszkoda:po_kolizji()
             else
-                zycia = zycia - 1
-                niesmiertelny = 2
-                wstrzasy = 0.3
-                oberwal = 1
+                gracz.obrywa()
             end
         end
         przeszkoda.x = przeszkoda.x - przeszkoda.predkosc - gracz.predkoscx
