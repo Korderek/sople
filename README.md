@@ -34,7 +34,7 @@
 
   - [ ] Game over na pustyni
   - [ ] w sklepiku Wyższy skok NA PUSTYNI
-  - [ ] naprawić przedmiot szybkość na pustyni
+  - [x] naprawić przedmiot szybkość na pustyni
   - [ ] muzyka
   - [ ] dźwięki 
 

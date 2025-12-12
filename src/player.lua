@@ -34,7 +34,7 @@ function Player.draw()
     love.graphics.setColor(1, 1, 1)
     local poza = animacja.stoi
     if wslizg > 0 then
-        poza = animacja.wslizg
+        poza = animacja.wslizg 
     elseif oberwal > 0 then
         poza = animacja.zraniony
     elseif radosny > 0 then

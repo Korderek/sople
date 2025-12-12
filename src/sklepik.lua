@@ -47,6 +47,9 @@ Sklepik.oferty = {
             zebraneMonety = zebraneMonety - self.cena
             gracz.przyspieszenie = gracz.przyspieszenie + 1
             self.cena = self.cena + 10
+            if stanGry == stan.pustynia then
+                gracz.predkoscx = gracz.predkoscx + 1
+            end
         end
     },
     {
