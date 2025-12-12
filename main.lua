@@ -9,6 +9,8 @@ local Sklepik = require("src.sklepik")
 local Dialog = require("src.dialog")
 local Swiaty = require("src.swiaty")
 local Pustynia = require("planety.pustynia.pustynia")
+local Wygrana = require("planety.wygrana")
+
 
 local flux = require("plugins.flux")
 
@@ -208,14 +210,16 @@ function love.load()
     najlepszy_wynik = 0
     wynik_koniec = 0
     zebraneMonety = 0
+    czas_gry = 0
+    czas_zwyciestwa = 10
 
     zapisek = Zapis.wczytaj()
     najlepszy_wynik = zapisek.najlepszy_wynik
     zebraneMonety = zapisek.monety
 
-    stan = { menu = {}, gra = {}, przegrana = {}, swiaty = {}, pustynia = {} }
+    stan = { menu = {}, gra = {}, przegrana = {}, swiaty = {}, pustynia = {}, wygrana = {} }
     -- Zmiana startowej lokacji na pustynię
-    stanGry = stan.pustynia
+    stanGry = stan.menu
     Pustynia.load()
 
     love.graphics.setFont(font)
@@ -228,6 +232,10 @@ end
 -- Główna pętla gry
 ---------------------
 function love.update(dt)
+    if czas_gry > czas_zwyciestwa and (stanGry == stan.gra or stanGry == stan.pustynia) then
+        Dialog.wyczysc()
+        Efekty.rozpocznijLadowanie(function() stanGry = stan.wygrana end)
+    end
     if zycia < 1 and wstrzasy < 0 and (stanGry == stan.gra or stanGry == stan.pustynia) then
         wynik_koniec = math.floor(punkty)
         losowyTekst = teksty[love.math.random(#teksty)]
@@ -243,7 +251,9 @@ function love.update(dt)
     oberwal = oberwal - dt
     wslizg = wslizg - dt
     wstrzasy = wstrzasy - dt
-
+    if (stanGry == stan.gra or stanGry == stan.pustynia) and not Sklepik.aktywny then
+        czas_gry = czas_gry + dt
+    end
     -- Jeśli sklepik otwarty, nie aktualizujemy gry
     if Sklepik.aktywny then
         return
@@ -364,6 +374,8 @@ function love.draw()
         love.graphics.printf("Wynik: " .. wynik_koniec, font, 0, wysokosc / 2 + 40, szerokosc, "center")
         love.graphics.printf("Najlepszy wynik: " .. najlepszy_wynik, font, 0, wysokosc / 2 + 80, szerokosc, "center")
         love.graphics.printf("Monety: " .. zebraneMonety, font, 0, wysokosc / 2 + 120, szerokosc, "center")
+    elseif stanGry == stan.wygrana then
+        Wygrana.draw()
     elseif stanGry == stan.swiaty then
         love.graphics.setColor(1, 1, 1)
         love.graphics.clear(0.5, 0.8, 1, 1)
