@@ -217,7 +217,7 @@ function love.load()
     najlepszy_wynik = zapisek.najlepszy_wynik
     zebraneMonety = zapisek.monety
 
-    stan = { menu = {}, gra = {}, przegrana = {}, swiaty = {}, pustynia = {}, wygrana = {} }
+    stan = { menu = {}, sople = {}, przegrana = {}, swiaty = {}, pustynia = {}, wygrana = {} }
     -- Zmiana startowej lokacji na pustynię
     stanGry = stan.menu
     Pustynia.load()
@@ -232,11 +232,11 @@ end
 -- Główna pętla gry
 ---------------------
 function love.update(dt)
-    if czas_gry > czas_zwyciestwa and (stanGry == stan.gra or stanGry == stan.pustynia) then
+    if czas_gry > czas_zwyciestwa and (stanGry == stan.sople or stanGry == stan.pustynia) then
         Dialog.wyczysc()
         Efekty.rozpocznijLadowanie(function() stanGry = stan.wygrana end)
     end
-    if zycia < 1 and wstrzasy < 0 and (stanGry == stan.gra or stanGry == stan.pustynia) then
+    if zycia < 1 and wstrzasy < 0 and (stanGry == stan.sople or stanGry == stan.pustynia) then
         wynik_koniec = math.floor(punkty)
         losowyTekst = teksty[love.math.random(#teksty)]
         Efekty.rozpocznijLadowanie(function() stanGry = stan.przegrana end)
@@ -251,7 +251,7 @@ function love.update(dt)
     oberwal = oberwal - dt
     wslizg = wslizg - dt
     wstrzasy = wstrzasy - dt
-    if (stanGry == stan.gra or stanGry == stan.pustynia) and not Sklepik.aktywny then
+    if (stanGry == stan.sople or stanGry == stan.pustynia) and not Sklepik.aktywny then
         czas_gry = czas_gry + dt
     end
     -- Jeśli sklepik otwarty, nie aktualizujemy gry
@@ -259,7 +259,7 @@ function love.update(dt)
         return
     end
 
-    if stanGry == stan.gra then
+    if stanGry == stan.sople then
         czerwien = math.min(1, czerwien + dt * szybkosci_tla[aktualny_poziom])
         krok = krok - dt
         if krok < 0 then
@@ -339,7 +339,7 @@ function love.draw()
         if UI.przycisk(przyciskStart, "LECIMY") then
             Efekty.rozpocznijLadowanie(function() stanGry = stan.swiaty end)
         end
-    elseif stanGry == stan.gra then
+    elseif stanGry == stan.sople then
         love.graphics.setColor(1, 1, 1, 1)
         love.graphics.drawStretched(jaskiniaImg, 0, 0, szerokosc, wysokosc)
         love.graphics.setColor(czerwien, 0.8, 1, 0.3)

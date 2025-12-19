@@ -12,7 +12,7 @@ local planety = {
         nazwa = "Dzika puszcza",
         zablokowana = false,
         akcja = function()
-            stanGry = stan.gra
+            stanGry = stan.sople
         end
     },
     pustynia = {
@@ -33,7 +33,7 @@ local planety = {
         nazwa = "Groźny wulkan",
         zablokowana = true,
         akcja = function()
-            stanGry = stan.gra
+            stanGry = stan.sople
         end
     },
     jednorozce = {
@@ -43,7 +43,7 @@ local planety = {
         nazwa = "Wesoła kraina",
         zablokowana = false,
         akcja = function()
-            stanGry = stan.gra
+            stanGry = stan.sople
         end
     },
 }
