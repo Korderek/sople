@@ -2,6 +2,10 @@ local json = require("plugins.json") -- Ładuje moduł JSON
 
 local Zapis = {}
 
+function Zapis.pusty()
+    return { najlepszy_wynik = 0, monety = 0 }
+end
+
 -- Funkcja zapisująca stan do pliku zapis.json
 function Zapis.zapisz(stan)
     local jsonDane = json.encode(stan)            -- Koduje stan do formatu JSON
@@ -14,7 +18,7 @@ function Zapis.wczytaj()
         local jsonDane = love.filesystem.read("zapis.json") -- Odczytuje dane z pliku
         return json.decode(jsonDane)                        -- Dekoduje dane JSON i zwraca
     else
-        return { najlepszy_wynik = 0, monety = 0 }          -- Zwraca nil jeśli plik nie istnieje
+        return Zapis.pusty()
     end
 end
 

@@ -12,6 +12,7 @@ local Swiaty = require("src.swiaty")
 local UI = require("src.ui")
 local Wygrana = require("planety.wygrana")
 local Zapis = require("src.zapis")
+local Jaskinia = require("planety.jaskinia.jaskinia")
 
 
 local flux = require("plugins.flux")
@@ -83,22 +84,25 @@ function love.load()
     local ilosc_monet = 3
     Monety.spawn(ilosc_monet)
 
+    -- Timery
     krok = 0
     radosny = 0
     oberwal = 0
     wslizg = 0
+    niesmiertelny = 0
+    wstrzasy = 0
+    czas_gry = 0
+    czas = 0
+
+    -- Inne zmienne gry
     tarcie = 0.74
     zycia = 3
     maxZycia = zycia
     wslizgAktywny = false
-    niesmiertelny = 0
-    wstrzasy = 0
-    czas = 0
     punkty = 0
     najlepszy_wynik = 0
     wynik_koniec = 0
     zebraneMonety = 0
-    czas_gry = 0
     czas_bossa = 3
 
     fps_reszta = 0
@@ -108,7 +112,6 @@ function love.load()
     zebraneMonety = zapisek.monety
 
     stan = { menu = {}, sople = {}, przegrana = {}, swiaty = {}, pustynia = {}, wygrana = {} }
-    -- Zmiana startowej lokacji na pustynię
     stanGry = stan.sople
     Pustynia.load()
 
@@ -166,69 +169,8 @@ function love.update(dt)
     end
 
     if stanGry == stan.sople then
-        czerwien = math.min(1, czerwien + dt * szybkosci_tla[aktualny_poziom])
-        krok = krok - dt
-        if krok < 0 then
-            gracz.idzie = not gracz.idzie
-            krok = krok + 0.3
-        end
-        local przyspieszenie = 0
-        if wslizg < -1 and love.keyboard.isDown("s") and wslizgAktywny then
-            --rozpoczęcie wślizgu
-            wslizg = 0.4
-        end
-        if wslizg < 0 then
-            if love.keyboard.isDown("a") then
-                gracz.kierunek = "lewo"
-                przyspieszenie = -gracz.przyspieszenie
-            end
-            if love.keyboard.isDown("d") then
-                gracz.kierunek = "prawo"
-                przyspieszenie = gracz.przyspieszenie
-            end
-        end
-        if wslizg > 0 then
-            if gracz.kierunek == "lewo" then
-                przyspieszenie = -gracz.przyspieszenie
-            else
-                przyspieszenie = gracz.przyspieszenie
-            end
-            if wslizg < 0.2 then
-                przyspieszenie = przyspieszenie * 0.8
-            else
-                przyspieszenie = przyspieszenie * 2.5
-            end
-        end
-        if przyspieszenie == 0 then
-            gracz.idzie = false
-            krok = 0
-        end
-        gracz.predkosc = gracz.predkosc * tarcie + przyspieszenie
-        gracz.x = gracz.x + gracz.predkosc
-
-        gracz.x = math.max(0, math.min(szerokosc - gracz.width, gracz.x))
-
-
-        if najlepszy_wynik < punkty then
-            najlepszy_wynik = punkty
-        end
-
-        Sople.update(dt)
-        Monety.update(dt)
-
-        -- Ruch i kolizja sklepiku
-        sklepik.y = sklepik.y + 2
-        if sklepik.y > wysokosc then
-            sklepik.y = -sklepikImg:getHeight()
-            sklepik.x = love.math.random(0, szerokosc - sklepik.width)
-        end
-        if kolizja(gracz, sklepik) then
-            Sklepik.otworz()
-            sklepik.y = -sklepikImg:getHeight()
-            sklepik.x = love.math.random(0, szerokosc - sklepik.width)
-        end
-    end
-    if stanGry == stan.pustynia then
+        Jaskinia.update(dt)
+    elseif stanGry == stan.pustynia then
         Pustynia.update(dt)
     end
 end
@@ -246,35 +188,7 @@ function love.draw()
             Efekty.rozpocznijLadowanie(function() stanGry = stan.swiaty end)
         end
     elseif stanGry == stan.sople then
-        love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.drawStretched(jaskiniaImg, 0, 0, szerokosc, wysokosc)
-        love.graphics.setColor(czerwien, 0.8, 1, 0.3)
-        love.graphics.rectangle("fill", 0, 0, szerokosc, wysokosc)
-        love.graphics.setColor(1, 1, 1, 1)
-
-        Efekty.wstrzasyZMoca(10)
-        Boss.draw()
-        Sople.draw()
-        Monety.draw()
-        if not Sklepik.aktywny then
-            love.graphics.drawCentered(sklepikImg, sklepik.x, sklepik.y, sklepik.width, sklepik.height)
-            love.graphics.rectangleDebug(sklepik.x, sklepik.y, sklepik.width, sklepik.height)
-        end
-        if gracz.skin == spioszekImg then
-            Efekty.latarka(gracz.x + gracz.width / 2, gracz.y + gracz.height / 2)
-        end
-        Player.draw()
-        Efekty.koniecWstrzasow()
-        UI.rysujSerca()
-
-        love.graphics.setColor(0, 0, 0)
-        love.graphics.print("Punkty: " .. punkty, 10, 10)
-        love.graphics.print("Najlepszy wynik: " .. najlepszy_wynik, 10, 65)
-        love.graphics.print(zebraneMonety, 75, 120)
-        love.graphics.setColor(1, 1, 1)
-        love.graphics.draw(stosMonet, 10, 125)
-
-        Sklepik.draw()
+        Jaskinia.draw()
     elseif stanGry == stan.przegrana then
         Przegrana.draw()
     elseif stanGry == stan.wygrana then
@@ -283,9 +197,10 @@ function love.draw()
         Swiaty.draw()
     elseif stanGry == stan.pustynia then
         Pustynia.draw()
-        love.graphics.setColor(1, 1, 1)
     end
 
+    love.graphics.setColor(1, 1, 1)
+    Sklepik.draw()
     Efekty.rysujLadowanie()
     Dialog.draw()
 end
