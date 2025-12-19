@@ -10,6 +10,7 @@ local Dialog = require("src.dialog")
 local Swiaty = require("src.swiaty")
 local Pustynia = require("planety.pustynia.pustynia")
 local Wygrana = require("planety.wygrana")
+local Boss = require("planety.jaskinia.boss")
 
 
 local flux = require("plugins.flux")
@@ -211,7 +212,9 @@ function love.load()
     wynik_koniec = 0
     zebraneMonety = 0
     czas_gry = 0
-    czas_zwyciestwa = 10
+    czas_bossa = 3
+
+    fps_reszta = 0
 
     zapisek = Zapis.wczytaj()
     najlepszy_wynik = zapisek.najlepszy_wynik
@@ -219,7 +222,7 @@ function love.load()
 
     stan = { menu = {}, sople = {}, przegrana = {}, swiaty = {}, pustynia = {}, wygrana = {} }
     -- Zmiana startowej lokacji na pustynię
-    stanGry = stan.menu
+    stanGry = stan.sople
     Pustynia.load()
 
     love.graphics.setFont(font)
@@ -232,9 +235,17 @@ end
 -- Główna pętla gry
 ---------------------
 function love.update(dt)
-    if czas_gry > czas_zwyciestwa and (stanGry == stan.sople or stanGry == stan.pustynia) then
+    fps_reszta = fps_reszta + dt
+    if fps_reszta < 1 / 60 then
+        return
+    end
+
+    fps_reszta = fps_reszta - 1 / 60
+    dt = 1 / 60
+
+    if czas_gry > czas_bossa and (stanGry == stan.sople or stanGry == stan.pustynia) then
         Dialog.wyczysc()
-        Efekty.rozpocznijLadowanie(function() stanGry = stan.wygrana end)
+        Boss.przywolaj()
     end
     if zycia < 1 and wstrzasy < 0 and (stanGry == stan.sople or stanGry == stan.pustynia) then
         wynik_koniec = math.floor(punkty)
@@ -244,6 +255,7 @@ function love.update(dt)
     if love.keyboard.isDown("escape") then love.event.quit() end
 
     Dialog.update(dt)
+    Boss.update(dt)
     UI.update()
     flux.update(dt)
     niesmiertelny = niesmiertelny - dt
@@ -347,6 +359,7 @@ function love.draw()
         love.graphics.setColor(1, 1, 1, 1)
 
         Efekty.wstrzasyZMoca(10)
+        Boss.draw()
         Sople.draw()
         Monety.draw()
         if not Sklepik.aktywny then
