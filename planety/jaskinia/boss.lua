@@ -29,6 +29,10 @@ function Boss.update(dt)
         else
             Boss.x = Boss.x - Boss.predkoscX
         end
+        -- Odbijanie od krawędzi ekranu
+        if Boss.x <= 0 or Boss.x + Bossimg:getWidth() >= szerokosc then
+            Boss.WPrawo = not Boss.WPrawo
+        end
     end
 end
 
