@@ -55,6 +55,10 @@ local drogi = {
 }
 
 function Swiaty.draw()
+    -- Tło (niebo)
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.clear(0.5, 0.8, 1, 1)
+
     -- Rysowanie świata
     love.graphics.setColor(1, 1, 1)
 
