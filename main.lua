@@ -58,8 +58,8 @@ function love.load()
     Dialog.wyczysc()
 
     gracz = {
-        x = math.max(0, math.min(100, szerokosc - 50)),
-        y = 1200,
+        x = 0,
+        y = 0,
         width = 50,
         height = 80,
         scale = 1.0,
@@ -114,7 +114,9 @@ function love.load()
     zebraneMonety = zapisek.monety + 1000
 
     stan = { menu = {}, sople = {}, przegrana = {}, swiaty = {}, pustynia = {}, wygrana = {} }
-    stanGry = stan.menu
+    stanGry = stan.pustynia
+
+    Jaskinia.load()
     Pustynia.load()
 
     love.graphics.setFont(font)
@@ -139,7 +141,7 @@ function love.update(dt)
     if love.keyboard.isDown("escape") then love.event.quit() end
 
     -- Czy gracz dotarł do bossa?
-    if czas_gry > czas_bossa and (stanGry == stan.sople or stanGry == stan.pustynia) then
+    if czas_gry > czas_bossa and stanGry == stan.sople then
         Dialog.wyczysc()
         Boss.przywolaj()
     end

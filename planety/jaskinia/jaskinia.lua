@@ -12,6 +12,15 @@ local Sound = require("src.sound")
 
 function Jaskinia.load()
     -- Inicjalizacja zmiennych specyficznych dla jaskini
+    gracz.x = szerokosc / 2 - 25
+    gracz.y = 800
+    gracz.width = 50
+    gracz.height = 80
+    kierunek = "prawo"
+    gracz.przyspieszenie = 2.18
+    gracz.predkosc = 0
+    gracz.idzie = false
+    gracz.robi_krok = false
 end
 
 function Jaskinia.update(dt)

@@ -97,7 +97,6 @@ function Sound.moneta()
 end
 
 function Sound.wslizg()
-    wslizg:setPitch(love.math.random(0.8, 1.2))
     wslizg:clone():play()
 end
 
@@ -117,6 +116,8 @@ end
 
 function Sound.skok_ladowanie()
     skok_ladowanie[love.math.random(1, #skok_ladowanie)]:clone():play()
+    local stop = zatrzymanie_snieg[love.math.random(1, #zatrzymanie_snieg)]:clone()
+    stop:play()
 end
 
 function Sound.kroki_snieg()

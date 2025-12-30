@@ -1,6 +1,7 @@
 local Swiaty = {}
 local UI = require("src.ui")
 local Efekty = require("src.efekty")
+local Jaskinia = require("planety.jaskinia.jaskinia")
 local Pustynia = require("planety.pustynia.pustynia")
 local Sound = require("src.sound")
 local klodka = love.graphics.newImage("gfx/klodka.png")
@@ -14,6 +15,7 @@ local planety = {
         zablokowana = false,
         akcja = function()
             stanGry = stan.sople
+            Jaskinia.load()
         end
     },
     pustynia = {

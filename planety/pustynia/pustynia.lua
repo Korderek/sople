@@ -33,7 +33,8 @@ function Pustynia.load()
 
     gracz.y = poziomZiemi
     gracz.x = 300
-    gracz.predkoscx = 10
+    gracz.height = 150
+    gracz.predkoscx = 12
     gracz.predkoscy = 0
     gracz.predkosc_mnoznik = 1
     gracz.robi_krok = false
@@ -45,9 +46,17 @@ function nowyptak(x, y)
         x = szerokosc + (x or 0),
         y = poziomZiemi - (y or 0),
         tekstura = ptakImg,
-        predkosc = 8,
+        predkosc = love.math.random(7, 9),
         width = ptakImg:getWidth(),
         height = ptakImg:getHeight(),
+        wave = love.math.random() * 2 * math.pi,
+        po_kolizji = function(self)
+            if wslizg > -0.3 and na_ziemi then
+                -- unik
+            else
+                gracz.obrywa()
+            end
+        end
     })
 end
 
@@ -64,7 +73,7 @@ function nowykaktus(x)
     else
         table.insert(listaprzeszkod, {
             x = szerokosc + (x or 0),
-            y = poziomZiemi - love.math.random(70, 0),
+            y = poziomZiemi - love.math.random(50, 0),
             tekstura = kaktusImg2,
             predkosc = 0,
             width = kaktusImg:getWidth(),
@@ -84,16 +93,18 @@ function nowyszkielet(x)
     })
 end
 
-local function nowywielbladprzod(x)
+local function nowywielbladprzod(x, w_prawo)
     table.insert(listaprzeszkod, {
         x = szerokosc + (x or 0),
         y = poziomZiemi - 200,
+        sx = w_prawo and 1 or -1,
         tekstura = wielbladprzodImg,
         predkosc = 0,
         width = wielbladprzodImg:getWidth(),
         height = wielbladprzodImg:getHeight(),
+        ponad_graczem = true,
         po_kolizji = function(self)
-            if wslizg > -0.5 then
+            if wslizg > -0.2 and na_ziemi then
                 --unik
             else
                 gracz.obrywa()
@@ -102,10 +113,11 @@ local function nowywielbladprzod(x)
     })
 end
 
-local function nowywielbladtyl(x)
+local function nowywielbladtyl(x, w_prawo)
     table.insert(listaprzeszkod, {
         x = szerokosc + (x or 0),
         y = poziomZiemi - 200,
+        sx = w_prawo and 1 or -1,
         tekstura = wielbladtylImg,
         predkosc = 0,
         width = wielbladtylImg:getWidth(),
@@ -115,8 +127,9 @@ local function nowywielbladtyl(x)
 end
 
 function nowywielblad(x)
-    nowywielbladprzod(x)
-    nowywielbladtyl(x)
+    local w_prawo = szansa(50)
+    nowywielbladprzod(x, w_prawo)
+    nowywielbladtyl(x, w_prawo)
 end
 
 function nowysklepik(x)
@@ -144,10 +157,12 @@ function Pustynia.update(dt)
         wslizg = 0.5
     end
     gracz.predkosc_mnoznik = 1
+    gracz.height = 150
     if wslizg > 0 then
+        gracz.height = 80
         gracz.predkosc_mnoznik = 2
         if wslizg < 0.2 then
-            gracz.predkosc_mnoznik = 0.8
+            gracz.predkosc_mnoznik = 0.9
         end
     end
 
@@ -155,10 +170,10 @@ function Pustynia.update(dt)
     if krok < 0 and na_ziemi then
         Sound.kroki_piasek()
         gracz.robi_krok = not gracz.robi_krok
-        krok = krok + 0.25
+        krok = krok + 0.3 * 12 / gracz.predkoscx
     end
 
-    gracz.predkoscx = gracz.predkoscx + 0.001
+    gracz.predkoscx = gracz.predkoscx + 0.002
     local predkoscx = gracz.predkoscx * gracz.predkosc_mnoznik
     punkty = punkty + predkoscx * dt / 10
     czas = czas + dt
@@ -186,16 +201,18 @@ function Pustynia.update(dt)
             end
         end
         przeszkoda.x = przeszkoda.x - przeszkoda.predkosc - predkoscx
+        if przeszkoda.wave then
+            przeszkoda.y = przeszkoda.y + math.sin(czas + przeszkoda.wave)
+        end
     end
 
-    local przyspieszenie = 0
+    local przyspieszenie = 1.60
     if love.keyboard.isDown("w") and gracz.y == poziomZiemi then
-        przyspieszenie = -37
+        przyspieszenie = -39
         na_ziemi = false
         gracz.robi_krok = false
         Sound.skok_odbicie()
     end
-    przyspieszenie = przyspieszenie + 1.56
     gracz.predkoscy = gracz.predkoscy + przyspieszenie
     gracz.y = gracz.y + gracz.predkoscy
     if gracz.y > poziomZiemi then
@@ -209,18 +226,30 @@ function Pustynia.update(dt)
     end
 end
 
-Pustynia.draw = function()
+local function przeszkoda_draw(przeszkoda)
+    local sx = przeszkoda.sx or 1
+    local x = przeszkoda.x + (sx == -1 and przeszkoda.width or 0)
+    love.graphics.draw(przeszkoda.tekstura, x, przeszkoda.y, 0, sx, 1)
+    love.graphics.rectangleDebug(przeszkoda.x, przeszkoda.y, przeszkoda.width, przeszkoda.height)
+end
+
+function Pustynia.draw()
     love.graphics.drawStretched(pustyniaImg, 0, 0, szerokosc, wysokosc)
     love.graphics.setBackgroundColor(0.9, 0.8, 0.5)
     Efekty.wstrzasyZMoca(10)
     love.graphics.loopHorizontally(ziemiaImg, dystans, poziomZiemi + 20, 1, 1)
     for _, przeszkoda in ipairs(listaprzeszkod) do
-        love.graphics.draw(przeszkoda.tekstura, przeszkoda.x, przeszkoda.y)
-        love.graphics.rectangleDebug(przeszkoda.x, przeszkoda.y, przeszkoda.width, przeszkoda.height)
+        przeszkoda_draw(przeszkoda)
     end
     Player.draw()
+    for _, przeszkoda in ipairs(listaprzeszkod) do
+        if przeszkoda.ponad_graczem then
+            przeszkoda_draw(przeszkoda)
+        end
+    end
     Sklepik.draw()
     UI.rysujSerca()
     love.graphics.print(math.floor(punkty), 10, 10)
 end
+
 return Pustynia

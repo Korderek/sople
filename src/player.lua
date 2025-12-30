@@ -41,6 +41,8 @@ function Player.draw()
         poza = animacja.radosny
     elseif gracz.idzie and gracz.robi_krok then
         poza = animacja.robi_krok
+    elseif gracz.predkoscy < 0 then
+        poza = animacja.robi_krok
     end
     love.graphics.drawQuadCentered(tekstura, poza, gracz.x, gracz.y, gracz.width, gracz.height, scale_x, scale_y)
     love.graphics.rectangleDebug(gracz.x, gracz.y, gracz.width, gracz.height)
