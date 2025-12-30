@@ -1,4 +1,5 @@
 local Sople = {}
+local Sound = require("src.sound")
 
 -- Lista wszystkich sopli
 local listaSopli = {}
@@ -42,6 +43,7 @@ function Sople.update(dt)
             sopel.y = -love.math.random(sopelImg:getHeight(), wysokosc)
         end
         if niesmiertelny < 0 and kolizja(gracz, sopel) then
+            Sound.trafiony()
             zycia = zycia - 1
             niesmiertelny = 2
             wstrzasy = 0.3

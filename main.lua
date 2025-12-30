@@ -3,11 +3,11 @@ local Boss = require("planety.jaskinia.boss")
 local Dialog = require("src.dialog")
 local Efekty = require("src.efekty")
 local Monety = require("src.monety")
-local Player = require("src.player")
 local Przegrana = require("planety.przegrana")
 local Pustynia = require("planety.pustynia.pustynia")
 local Sklepik = require("src.sklepik")
 local Sople = require("src.sople")
+local Sound = require("src.sound")
 local Swiaty = require("src.swiaty")
 local UI = require("src.ui")
 local Wygrana = require("planety.wygrana")
@@ -67,13 +67,15 @@ function love.load()
         kierunek = "prawo",
         przyspieszenie = 2.18,
         predkosc = 0,
-        idzie = true
+        idzie = false,
+        robi_krok = false,
     }
     function gracz.obrywa()
         zycia = zycia - 1
         niesmiertelny = 2
         wstrzasy = 0.3
         oberwal = 1
+        Sound.trafiony()
     end
 
     sklepik = { x = love.math.random(0, szerokosc - 50), y = -100, width = 100, height = 100 }
@@ -109,10 +111,10 @@ function love.load()
 
     zapisek = Zapis.wczytaj()
     najlepszy_wynik = zapisek.najlepszy_wynik
-    zebraneMonety = zapisek.monety
+    zebraneMonety = zapisek.monety + 1000
 
     stan = { menu = {}, sople = {}, przegrana = {}, swiaty = {}, pustynia = {}, wygrana = {} }
-    stanGry = stan.sople
+    stanGry = stan.menu
     Pustynia.load()
 
     love.graphics.setFont(font)
@@ -183,9 +185,11 @@ function love.draw()
         love.graphics.setBackgroundColor(0.5, 0.8, 1, 1)
         if UI.przycisk(przyciskTryb, poziomy[aktualny_poziom]) then
             aktualny_poziom = aktualny_poziom % #poziomy + 1
+            Sound.wybierz()
         end
-        if UI.przycisk(przyciskStart, "LECIMY") then
+        if UI.przycisk(przyciskStart, "Lecimy!") then
             Efekty.rozpocznijLadowanie(function() stanGry = stan.swiaty end)
+            Sound.wybierz()
         end
     elseif stanGry == stan.sople then
         Jaskinia.draw()

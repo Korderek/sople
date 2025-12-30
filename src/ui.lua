@@ -1,5 +1,6 @@
 local UI = {}
 local Shader = require("src.shader")
+local Sound = require("src.sound")
 
 local lewy_przycisk = {
     puszczony = true,
@@ -7,9 +8,18 @@ local lewy_przycisk = {
     klikniety = false,
 }
 local mysz_x, mysz_y = love.mouse.getPosition()
+local teraz_na_przycisku = false
+local poprzednio_na_przycisku = false
 
 -- Aktualizuje stan przycisków myszy
 function UI.update()
+    -- Jeśli mysz najechała właśnie na przycisk, odtwarzamy dźwięk
+    if not poprzednio_na_przycisku and teraz_na_przycisku then
+        Sound.klik()
+    end
+    poprzednio_na_przycisku = teraz_na_przycisku
+    teraz_na_przycisku = false
+
     mysz_x, mysz_y = love.mouse.getPosition()
 
     lewy_przycisk.puszczony = not love.mouse.isDown(1)
@@ -137,7 +147,9 @@ end
 -- Funkcje pomocnicze
 -----------------------
 function czy_mysz_na_przycisku(wymiary)
-    return kolizja({ x = mysz_x, y = mysz_y, width = 1, height = 1 }, wymiary)
+    local na_przycisku = kolizja({ x = mysz_x, y = mysz_y, width = 1, height = 1 }, wymiary)
+    teraz_na_przycisku = teraz_na_przycisku or na_przycisku
+    return na_przycisku
 end
 
 return UI

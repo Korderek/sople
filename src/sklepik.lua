@@ -1,5 +1,6 @@
 local UI = require("src.ui")
 local Dialog = require("src.dialog")
+local Sound = require("src.sound")
 
 local wyjscieImg = love.graphics.newImage("gfx/sklepik/wyjscie.png")
 
@@ -104,11 +105,13 @@ function Sklepik.otworz()
     }
     Dialog.wyczysc()
     Dialog.wiadomosc("Sprzedawca", powitanie[love.math.random(1, #powitanie)])
+    Sound.sklepik_otworz()
 end
 
 function Sklepik.zamknij()
     Sklepik.aktywny = false
     Dialog.wyczysc()
+    Sound.sklepik_wyjscie()
 end
 
 function Sklepik.draw()
@@ -147,6 +150,7 @@ function Sklepik.draw()
         local tekst = oferta.nazwa .. " (" .. oferta.cena .. ")"
         if UI.przycisk_sklepik(kafelek, oferta.grafika, tekst, not oferta:dostepna()) then
             oferta:akcja()
+            Sound.sklepik_zakup()
         end
         kafelek.x = kafelek.x + slotSize + spacing
     end

@@ -1,4 +1,8 @@
 {
   "runtime.version": "LuaJIT",
-  "diagnostics.disable": ["undefined-global", "lowercase-global"]
+  "diagnostics.disable": [
+    "undefined-global",
+    "lowercase-global"
+  ],
+  "completion.autoRequire": false
 }

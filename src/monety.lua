@@ -1,4 +1,5 @@
 local Monety = {}
+local Sound = require("src.sound")
 
 -- Lista wszystkich monet
 local listaMonet = {}
@@ -26,6 +27,7 @@ function Monety.update(dt)
             radosny = 0.3
             zebraneMonety = zebraneMonety + 1
             listaMonet[i] = Monety.losowaMoneta()
+            Sound.moneta()
         end
     end
 end

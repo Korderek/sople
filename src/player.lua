@@ -6,14 +6,14 @@ local animacje = { -- wymiary i położenie klatek animacji na teksturze
     standard = {
         stoi = love.graphics.newQuad(18, 18, 109, 235, tekstura_standard),
         zraniony = love.graphics.newQuad(131, 18, 113, 235, tekstura_standard),
-        idzie = love.graphics.newQuad(244, 18, 122, 235, tekstura_standard),
+        robi_krok = love.graphics.newQuad(244, 18, 122, 235, tekstura_standard),
         wslizg = love.graphics.newQuad(361, 18, 164, 235, tekstura_standard),
         radosny = love.graphics.newQuad(521, 18, 150, 235, tekstura_standard),
     },
     spioszek = {
         stoi = love.graphics.newQuad(15, 10, 134, 235, tekstura_spioszek),
         zraniony = love.graphics.newQuad(147, 10, 122, 235, tekstura_spioszek),
-        idzie = love.graphics.newQuad(278, 10, 129, 235, tekstura_spioszek),
+        robi_krok = love.graphics.newQuad(278, 10, 129, 235, tekstura_spioszek),
         wslizg = love.graphics.newQuad(407, 10, 133, 235, tekstura_spioszek),
         radosny = love.graphics.newQuad(547, 10, 145, 235, tekstura_spioszek),
     }
@@ -34,13 +34,13 @@ function Player.draw()
     love.graphics.setColor(1, 1, 1)
     local poza = animacja.stoi
     if wslizg > 0 then
-        poza = animacja.wslizg 
+        poza = animacja.wslizg
     elseif oberwal > 0 then
         poza = animacja.zraniony
     elseif radosny > 0 then
         poza = animacja.radosny
-    elseif gracz.idzie == true and math.abs(gracz.predkosc) > 0.1 then
-        poza = animacja.idzie
+    elseif gracz.idzie and gracz.robi_krok then
+        poza = animacja.robi_krok
     end
     love.graphics.drawQuadCentered(tekstura, poza, gracz.x, gracz.y, gracz.width, gracz.height, scale_x, scale_y)
     love.graphics.rectangleDebug(gracz.x, gracz.y, gracz.width, gracz.height)

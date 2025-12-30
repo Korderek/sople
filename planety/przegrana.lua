@@ -1,3 +1,6 @@
+local Efekty = require("src.efekty")
+local Sound = require("src.sound")
+
 local Przegrana = {}
 
 local teksty = {
@@ -126,7 +129,10 @@ function Przegrana.load()
         losowyTekst = teksty.pustynia[love.math.random(#teksty.pustynia)]
     end
     wynik_koniec = math.floor(punkty)
-    Efekty.rozpocznijLadowanie(function() stanGry = stan.przegrana end)
+    Efekty.rozpocznijLadowanie(function()
+        stanGry = stan.przegrana
+        Sound.przegrana()
+    end)
 end
 
 function Przegrana.draw()

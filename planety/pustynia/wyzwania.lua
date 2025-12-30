@@ -84,8 +84,7 @@ local listawyzwan = {
 }
 
 function Wyzwania.losuj()
-    return listawyzwan[9]
-    --return listawyzwan[love.math.random(#listawyzwan)]
+    return listawyzwan[love.math.random(#listawyzwan)]
 end
 
 return Wyzwania

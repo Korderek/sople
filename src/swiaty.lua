@@ -2,6 +2,7 @@ local Swiaty = {}
 local UI = require("src.ui")
 local Efekty = require("src.efekty")
 local Pustynia = require("planety.pustynia.pustynia")
+local Sound = require("src.sound")
 local klodka = love.graphics.newImage("gfx/klodka.png")
 
 local planety = {
@@ -70,6 +71,7 @@ function Swiaty.draw()
     -- Rysowanie planet
     for _, p in pairs(planety) do
         if UI.przycisk_swiat(p.x, p.y, p.img, p.nazwa, p.zablokowana) then
+            Sound.start_poziomu()
             Efekty.rozpocznijLadowanie(p.akcja)
         end
     end

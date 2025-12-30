@@ -4,6 +4,7 @@ local Player = require("src.player")
 local Efekty = require("src.efekty")
 local Wyzwania = require("planety.pustynia.wyzwania")
 local Sklepik = require("src.sklepik")
+local Sound = require("src.sound")
 
 local listaprzeszkod = {}
 
@@ -20,7 +21,7 @@ local szkieletImg = love.graphics.newImage("gfx/szkielet.png")
 local wielbladprzodImg = love.graphics.newImage("gfx/wielblad-przod.png")
 local wielbladtylImg = love.graphics.newImage("gfx/wielblad-tyl.png")
 
-Pustynia.load = function()
+function Pustynia.load()
     dystans = 0
     czas = 0
     punkty = 0
@@ -28,11 +29,15 @@ Pustynia.load = function()
     aktywne_wyzwanie = nil
     wslizg = 0
     wslizg_aktywny = false
+    na_ziemi = true
+    krok = 0
 
     gracz.y = poziomZiemi
     gracz.x = 300
     gracz.predkoscx = 10
     gracz.predkoscy = 0
+    gracz.robi_krok = false
+    gracz.idzie = true
 end
 
 function nowyptak(x, y)
@@ -135,6 +140,7 @@ end
 function Pustynia.update(dt)
     if wslizg < -1 and love.keyboard.isDown("s") then
         --rozpoczęcie wślizgu
+        Sound.wslizg()
         wslizg_aktywny = true
         wslizg = 0.4
         gracz.predkoscx = gracz.predkoscx + 10
@@ -144,6 +150,12 @@ function Pustynia.update(dt)
         wslizg_aktywny = false
     end
 
+    krok = krok - dt
+    if krok < 0 and na_ziemi then
+        Sound.kroki_piasek()
+        gracz.robi_krok = not gracz.robi_krok
+        krok = krok + 0.25
+    end
 
     gracz.predkoscx = gracz.predkoscx + 0.001
     punkty = punkty + gracz.predkoscx * dt / 10
@@ -177,6 +189,9 @@ function Pustynia.update(dt)
     local przyspieszenie = 0
     if love.keyboard.isDown("w") and gracz.y == poziomZiemi then
         przyspieszenie = -37
+        na_ziemi = false
+        gracz.robi_krok = false
+        Sound.skok_odbicie()
     end
     przyspieszenie = przyspieszenie + 1.56
     gracz.predkoscy = gracz.predkoscy + przyspieszenie
@@ -184,6 +199,11 @@ function Pustynia.update(dt)
     if gracz.y > poziomZiemi then
         gracz.y = poziomZiemi
         gracz.predkoscy = 0
+        if not na_ziemi then
+            Sound.skok_ladowanie()
+            na_ziemi = true
+            gracz.robi_krok = false
+        end
     end
 end
 

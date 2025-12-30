@@ -8,6 +8,7 @@ local Boss = require("planety.jaskinia.boss")
 local Monety = require("src.monety")
 local Sklepik = require("src.sklepik")
 local UI = require("src.ui")
+local Sound = require("src.sound")
 
 function Jaskinia.load()
     -- Inicjalizacja zmiennych specyficznych dla jaskini
@@ -16,13 +17,15 @@ end
 function Jaskinia.update(dt)
     czerwien = math.min(1, czerwien + dt * szybkosci_tla[aktualny_poziom])
     krok = krok - dt
-    if krok < 0 then
-        gracz.idzie = not gracz.idzie
+    if krok < 0 and gracz.idzie then
+        Sound.kroki_snieg()
+        gracz.robi_krok = not gracz.robi_krok
         krok = krok + 0.3
     end
     local przyspieszenie = 0
     if wslizg < -1 and love.keyboard.isDown("s") and wslizgAktywny then
         --rozpoczęcie wślizgu
+        Sound.wslizg()
         wslizg = 0.4
     end
     if wslizg < 0 then
@@ -48,8 +51,14 @@ function Jaskinia.update(dt)
         end
     end
     if przyspieszenie == 0 then
+        if gracz.idzie then
+            Sound.stop_snieg()
+        end
         gracz.idzie = false
+        gracz.robi_krok = false
         krok = 0
+    else
+        gracz.idzie = true
     end
     gracz.predkosc = gracz.predkosc * tarcie + przyspieszenie
     gracz.x = gracz.x + gracz.predkosc
