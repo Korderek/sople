@@ -44,14 +44,16 @@ local sklepik_otworz = love.audio.newSource("assets/sound/shop-open.wav", "stati
 local sklepik_wyjscie = love.audio.newSource("assets/sound/shop-close.wav", "static")
 local sklepik_zakup = love.audio.newSource("assets/sound/shop-buy.wav", "static")
 local trafiony = love.audio.newSource("assets/sound/hit.wav", "static")
-local klik = love.audio.newSource("assets/sound/click.wav", "static")
-local wybierz = love.audio.newSource("assets/sound/select.wav", "static")
+local kursor_najechal = love.audio.newSource("assets/sound/hover.wav", "static")
+local kursor_klik = love.audio.newSource("assets/sound/click.wav", "static")
+local kursor_potwierdz = love.audio.newSource("assets/sound/confirm.wav", "static")
 local moneta = love.audio.newSource("assets/sound/coin.wav", "static")
 local moneta_jingle = love.audio.newSource("assets/sound/coin-jingle.wav", "static")
 local przegrana = love.audio.newSource("assets/sound/game-over.wav", "static")
 local ulepszenie = love.audio.newSource("assets/sound/upgrade.wav", "static")
-local start_poziomu = love.audio.newSource("assets/sound/level-start.wav", "static")
-
+local boss_gotowy = love.audio.newSource("assets/sound/boss-get-ready.wav", "static")
+local boss_wejscie = love.audio.newSource("assets/sound/boss-enter.flac", "static")
+local boss_smiech = love.audio.newSource("assets/sound/boss-laugh.flac", "static")
 
 function Sound.sklepik_otworz()
     sklepik_otworz:clone():play()
@@ -69,12 +71,19 @@ function Sound.sklepik_zakup()
     jingle:play()
 end
 
-function Sound.klik()
-    klik:clone():play()
+function Sound.kursor_najechal()
+    kursor_najechal:clone():play()
 end
 
-function Sound.wybierz()
-    wybierz:clone():play()
+function Sound.kursor_klik()
+    kursor_klik:clone():play()
+end
+
+function Sound.kursor_potwierdz()
+    local potwierdz = kursor_potwierdz:clone()
+    potwierdz:setPitch(love.math.random(1.2))
+    potwierdz:setVolume(0.7)
+    potwierdz:play()
 end
 
 function Sound.moneta()
@@ -128,8 +137,16 @@ function Sound.stop_snieg()
     stop:play()
 end
 
-function Sound.start_poziomu()
-    start_poziomu:play()
+function Sound.boss_przygotuj_sie()
+    boss_gotowy:play()
+end
+
+function Sound.boss_wejscie()
+    boss_wejscie:play()
+end
+
+function Sound.boss_smiech()
+    boss_smiech:play()
 end
 
 return Sound

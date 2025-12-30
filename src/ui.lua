@@ -15,7 +15,7 @@ local poprzednio_na_przycisku = false
 function UI.update()
     -- Jeśli mysz najechała właśnie na przycisk, odtwarzamy dźwięk
     if not poprzednio_na_przycisku and teraz_na_przycisku then
-        Sound.klik()
+        Sound.kursor_najechal()
     end
     poprzednio_na_przycisku = teraz_na_przycisku
     teraz_na_przycisku = false

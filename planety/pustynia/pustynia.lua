@@ -28,7 +28,6 @@ function Pustynia.load()
     wynik_koniec = 0
     aktywne_wyzwanie = nil
     wslizg = 0
-    wslizg_aktywny = false
     na_ziemi = true
     krok = 0
 
@@ -36,6 +35,7 @@ function Pustynia.load()
     gracz.x = 300
     gracz.predkoscx = 10
     gracz.predkoscy = 0
+    gracz.predkosc_mnoznik = 1
     gracz.robi_krok = false
     gracz.idzie = true
 end
@@ -138,16 +138,17 @@ function nowysklepik(x)
 end
 
 function Pustynia.update(dt)
-    if wslizg < -1 and love.keyboard.isDown("s") then
+    if wslizg < -0.3 and love.keyboard.isDown("s") then
         --rozpoczęcie wślizgu
         Sound.wslizg()
-        wslizg_aktywny = true
-        wslizg = 0.4
-        gracz.predkoscx = gracz.predkoscx + 10
+        wslizg = 0.5
     end
-    if wslizg < 0 and wslizg_aktywny == true then
-        gracz.predkoscx = gracz.predkoscx - 10
-        wslizg_aktywny = false
+    gracz.predkosc_mnoznik = 1
+    if wslizg > 0 then
+        gracz.predkosc_mnoznik = 2
+        if wslizg < 0.2 then
+            gracz.predkosc_mnoznik = 0.8
+        end
     end
 
     krok = krok - dt
@@ -158,16 +159,17 @@ function Pustynia.update(dt)
     end
 
     gracz.predkoscx = gracz.predkoscx + 0.001
-    punkty = punkty + gracz.predkoscx * dt / 10
+    local predkoscx = gracz.predkoscx * gracz.predkosc_mnoznik
+    punkty = punkty + predkoscx * dt / 10
     czas = czas + dt
-    dystans = dystans - gracz.predkoscx
+    dystans = dystans - predkoscx
 
     if not aktywne_wyzwanie then
         aktywne_wyzwanie = Wyzwania.losuj()
         aktywne_wyzwanie.przeszkody()
         aktywne_wyzwanie.odleglosc = -szerokosc
     else
-        aktywne_wyzwanie.odleglosc = aktywne_wyzwanie.odleglosc + gracz.predkoscx
+        aktywne_wyzwanie.odleglosc = aktywne_wyzwanie.odleglosc + predkoscx
         if aktywne_wyzwanie.odleglosc >= aktywne_wyzwanie.szerokosc then
             aktywne_wyzwanie = nil
             przeszkody = {}
@@ -183,7 +185,7 @@ function Pustynia.update(dt)
                 gracz.obrywa()
             end
         end
-        przeszkoda.x = przeszkoda.x - przeszkoda.predkosc - gracz.predkoscx
+        przeszkoda.x = przeszkoda.x - przeszkoda.predkosc - predkoscx
     end
 
     local przyspieszenie = 0

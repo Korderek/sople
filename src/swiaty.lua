@@ -71,7 +71,7 @@ function Swiaty.draw()
     -- Rysowanie planet
     for _, p in pairs(planety) do
         if UI.przycisk_swiat(p.x, p.y, p.img, p.nazwa, p.zablokowana) then
-            Sound.start_poziomu()
+            Sound.kursor_potwierdz()
             Efekty.rozpocznijLadowanie(p.akcja)
         end
     end

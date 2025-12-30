@@ -59,7 +59,7 @@ function love.load()
 
     gracz = {
         x = math.max(0, math.min(100, szerokosc - 50)),
-        y = 900,
+        y = 1200,
         width = 50,
         height = 80,
         scale = 1.0,
@@ -185,11 +185,11 @@ function love.draw()
         love.graphics.setBackgroundColor(0.5, 0.8, 1, 1)
         if UI.przycisk(przyciskTryb, poziomy[aktualny_poziom]) then
             aktualny_poziom = aktualny_poziom % #poziomy + 1
-            Sound.wybierz()
+            Sound.kursor_klik()
         end
         if UI.przycisk(przyciskStart, "Lecimy!") then
             Efekty.rozpocznijLadowanie(function() stanGry = stan.swiaty end)
-            Sound.wybierz()
+            Sound.kursor_potwierdz()
         end
     elseif stanGry == stan.sople then
         Jaskinia.draw()
