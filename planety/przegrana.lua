@@ -1,5 +1,10 @@
 local Efekty = require("src.efekty")
 local Sound = require("src.sound")
+local UI = require("src.ui") -- Dodanie modułu UI, aby obsłużyć przyciski
+local Jaskinia = require("planety.jaskinia.jaskinia")
+local Pustynia = require("planety.pustynia.pustynia")
+local Sople = require("src.sople")
+local Monety = require("src.monety")
 
 local Przegrana = {}
 
@@ -123,9 +128,12 @@ local teksty = {
 local losowyTekst = ""
 
 function Przegrana.load()
+    -- store previous state name to avoid comparing table references
     if stanGry == stan.sople then
+        Przegrana.poprzedni_stan = "sople"
         losowyTekst = teksty.sople[love.math.random(#teksty.sople)]
     elseif stanGry == stan.pustynia then
+        Przegrana.poprzedni_stan = "pustynia"
         losowyTekst = teksty.pustynia[love.math.random(#teksty.pustynia)]
     end
     wynik_koniec = math.floor(punkty)
@@ -141,6 +149,45 @@ function Przegrana.draw()
     love.graphics.printf("Wynik: " .. wynik_koniec, font, 0, wysokosc / 2 + 40, szerokosc, "center")
     love.graphics.printf("Najlepszy wynik: " .. najlepszy_wynik, font, 0, wysokosc / 2 + 80, szerokosc, "center")
     love.graphics.printf("Monety: " .. zebraneMonety, font, 0, wysokosc / 2 + 120, szerokosc, "center")
+
+    -- Dodanie przycisków "Restart" i "Powrót do menu"
+    if UI.przycisk({ x = szerokosc / 2 - 100, y = wysokosc / 2 + 160, width = 200, height = 50 }, "Restart") then
+        -- Reset core gameplay state so Restart is a true restart (no invincibility)
+        zycia = maxZycia
+        punkty = 0
+        czas_gry = 0
+        wstrzasy = 0
+        niesmiertelny = 0
+        radosny = 0
+        oberwal = 0
+        wslizg = 0
+        wslizgAktywny = false
+
+        -- Jeśli poprzedni stan to pustynia, restartujemy Pustynię
+        if Przegrana.poprzedni_stan == "pustynia" then
+            Przegrana.poprzedni_stan = nil
+            -- Wyczyść przeszkody i monety, zainicjuj pustynię
+            Pustynia.reset()
+            Monety.reset()
+            Monety.spawn(3)
+            Pustynia.load()
+            stanGry = stan.pustynia
+        else
+            Przegrana.poprzedni_stan = nil
+            -- Wyczyść sopli i monety, zainicjuj jaskinię
+            Sople.reset()
+            Sople.spawn(5)
+            Monety.reset()
+            Monety.spawn(3)
+            Jaskinia.load()
+            stanGry = stan.sople
+        end
+    end
+
+    if UI.przycisk({ x = szerokosc / 2 - 100, y = wysokosc / 2 + 220, width = 200, height = 50 }, "Menu") then
+        Przegrana.poprzedni_stan = nil
+        stanGry = stan.menu
+    end
 end
 
 return Przegrana

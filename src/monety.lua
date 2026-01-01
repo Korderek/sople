@@ -49,4 +49,8 @@ function Monety.losowaMoneta()
     }
 end
 
+function Monety.reset()
+    listaMonet = {}
+end
+
 return Monety

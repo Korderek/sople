@@ -69,4 +69,11 @@ function Sople.losowy()
     }
 end
 
+function Sople.reset()
+    listaSopli = {}
+    czas = 0
+    czas_ostatniego_dodania = 0
+    predkosc = 6
+end
+
 return Sople

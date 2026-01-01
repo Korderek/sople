@@ -41,6 +41,18 @@ function Pustynia.load()
     gracz.idzie = true
 end
 
+function Pustynia.reset()
+    listaprzeszkod = {}
+    dystans = 0
+    czas = 0
+    punkty = 0
+    wynik_koniec = 0
+    aktywne_wyzwanie = nil
+    wslizg = 0
+    na_ziemi = true
+    krok = 0
+end
+
 function nowyptak(x, y)
     table.insert(listaprzeszkod, {
         x = szerokosc + (x or 0),
