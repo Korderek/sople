@@ -114,7 +114,7 @@ function love.load()
     zebraneMonety = zapisek.monety + 1000
 
     stan = { menu = {}, sople = {}, przegrana = {}, swiaty = {}, pustynia = {}, wygrana = {} }
-    stanGry = stan.pustynia
+    stanGry = stan.menu
 
     Jaskinia.load()
     Pustynia.load()
@@ -185,6 +185,9 @@ end
 function love.draw()
     if stanGry == stan.menu then
         love.graphics.setBackgroundColor(0.5, 0.8, 1, 1)
+        love.graphics.setFont(font)
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.printf("Sople", 0, wysokosc / 2 - 150, szerokosc, "center")
         if UI.przycisk(przyciskTryb, poziomy[aktualny_poziom]) then
             aktualny_poziom = aktualny_poziom % #poziomy + 1
             Sound.kursor_klik()
